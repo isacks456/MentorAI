@@ -12,6 +12,7 @@ function AnswerForm({ task }) {
 	const [result, setResult] = useState("");
 	const [feedback, setFeedback] = useState(null);
 	const [answers, setAnswers] = useState([]);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
     async function loadAnswers() {
@@ -39,6 +40,12 @@ function AnswerForm({ task }) {
     return;
 }
 
+	if (isSubmitting) {
+    return;
+}
+
+    setIsSubmitting(true);
+
     try {
         const data = await submitTrainingAnswer(task.id, answer);
 
@@ -47,10 +54,11 @@ function AnswerForm({ task }) {
 		const history = await getTrainingAnswers(task.id);
 		setAnswers(history);
 		setAnswer("");
-        console.log("Ответ сервера:", data);
     } catch (error) {
         console.error(error);
         setResult("Не удалось отправить ответ");
+    } finally {
+        setIsSubmitting(false);
     }
 }
 	return (
@@ -70,9 +78,9 @@ function AnswerForm({ task }) {
 			<div className="answer-footer">
 				<span>Постарайся дать развёрнутый ответ</span>
 
-				<button type="button" onClick={handleSubmit}>
+				<button type="button" onClick={handleSubmit} disabled={isSubmitting}>
 					<Send size={17}/>
-					Отправить ответ
+					{isSubmitting ? "Отправляем..." : "Отправить ответ"}
 				</button>
 			</div>
 			{result && (

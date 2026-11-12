@@ -38,6 +38,38 @@
             color: #5592ff;
         }
     }
+
+    .exercise-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            border: 1px solid #303542;
+            border-radius: 9px;
+            background-color: transparent;
+            color: #aeb6c5;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+            &:hover:not(:disabled) {
+                background-color: #262b37;
+                color: #ffffff;
+                border-color: #5592ff;
+            }
+
+            &:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+        }
+    }
 }
 
 @media (max-width: 700px) {

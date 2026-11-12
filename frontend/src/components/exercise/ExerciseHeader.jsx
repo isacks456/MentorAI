@@ -1,7 +1,14 @@
-import { Target, Clock3 } from "lucide-react";
+import { Target, Clock3, ChevronLeft, ChevronRight } from "lucide-react";
 import "./ExerciseHeader.css";
 
-function ExerciseHeader() {
+function ExerciseHeader({
+    currentIndex,
+    totalTasks,
+    canGoPrev,
+    canGoNext,
+    onPrevTask,
+    onNextTask
+}) {
 	return (
 		<section className="exercise-header">
 			<div>
@@ -12,8 +19,34 @@ function ExerciseHeader() {
 			<div className="exercise-info">
 				<div className="exercise-progress">
 					<Target size={18}/>
-					<span>Задание 1 из 5</span>
+					<span>
+						{totalTasks > 0
+							? `Задание ${currentIndex + 1} из ${totalTasks}`
+							: "Нет заданий"}
+					</span>
 				</div>
+
+				{totalTasks > 1 && (
+					<div className="exercise-nav">
+						<button
+							type="button"
+							aria-label="Предыдущее задание"
+							onClick={onPrevTask}
+							disabled={!canGoPrev}
+						>
+							<ChevronLeft size={18}/>
+						</button>
+
+						<button
+							type="button"
+							aria-label="Следующее задание"
+							onClick={onNextTask}
+							disabled={!canGoNext}
+						>
+							<ChevronRight size={18}/>
+						</button>
+					</div>
+				)}
 
 				<div className="exercise-time">
 					<Clock3 size={18}/>
