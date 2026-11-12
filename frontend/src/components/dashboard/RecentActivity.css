@@ -52,3 +52,9 @@
         }
     }
 }
+
+.activity-empty {
+    color: var(--text-secondary, #888);
+    font-size: 14px;
+    padding: 12px 0;
+}

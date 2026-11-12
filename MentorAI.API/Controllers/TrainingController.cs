@@ -99,6 +99,55 @@ public class TrainingController : ControllerBase
         return Ok(answers);
     }
 
+    [HttpGet("activity")]
+    public async Task<IActionResult> GetRecentActivity()
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        var trainingActivities = await _db.TrainingAnswers
+            .Where(answer => answer.ApplicationUserId == user.Id)
+            .OrderByDescending(answer => answer.CreatedAt)
+            .Take(5)
+            .Join(
+                _db.TrainingTasks,
+                answer => answer.TrainingTaskId,
+                task => task.Id,
+                (answer, task) => new RecentActivityItem
+                {
+                    Type = "training",
+                    Title = task.Title,
+                    Status = answer.Score.HasValue ? $"Оценка {answer.Score.Value}%" : "Ответ сохранён",
+                    Date = answer.CreatedAt
+                })
+            .ToListAsync();
+
+        var chatActivities = await _db.ChatSessions
+            .Where(session => session.ApplicationUserId == user.Id)
+            .OrderByDescending(session => session.CreatedAt)
+            .Take(5)
+            .Select(session => new RecentActivityItem
+            {
+                Type = "chat",
+                Title = session.Title,
+                Status = "AI-наставник",
+                Date = session.CreatedAt
+            })
+            .ToListAsync();
+
+        var activity = trainingActivities
+            .Concat(chatActivities)
+            .OrderByDescending(item => item.Date)
+            .Take(6)
+            .ToList();
+
+        return Ok(activity);
+    }
+
     [HttpGet("results")]
     public async Task<IActionResult> GetResults()
     {
@@ -210,4 +259,12 @@ public class TrainingController : ControllerBase
 
         return Ok(result);
     }
+}
+
+public record RecentActivityItem
+{
+    public string Type { get; set; } = "training";
+    public string Title { get; set; } = "";
+    public string Status { get; set; } = "";
+    public DateTime Date { get; set; }
 }
