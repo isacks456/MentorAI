@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import KnowledgeHeader from "../components/knowledge/KnowledgeHeader";
 import KnowledgeSearch from "../components/knowledge/KnowledgeSearch";
@@ -10,9 +11,23 @@ import "./Knowledge.css";
 
 function Knowledge() {
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const queryParam = searchParams.get("q") || "";
+
     const [activeCategory, setActiveCategory] = useState(null);
 
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState(queryParam);
+
+    // синхронизация с URL: поиск из Header приходит через /knowledge?q=...
+    useEffect(() => {
+        setSearchQuery(queryParam);
+    }, [queryParam]);
+
+    const handleSearchChange = (value) => {
+        setSearchQuery(value);
+        setSearchParams(value ? { q: value } : {}, { replace: true });
+    };
 
     return (
         <div className="knowledge-page">
@@ -20,7 +35,7 @@ function Knowledge() {
 
             <KnowledgeSearch
                 searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
+                setSearchQuery={handleSearchChange}
             />
 
             <KnowledgeCategories

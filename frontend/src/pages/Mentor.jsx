@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import ChatHistory from "../components/mentor/ChatHistory";
 import ChatWindow from "../components/mentor/ChatWindow";
@@ -26,6 +26,16 @@ function Mentor() {
 	const [sessions, setSessions] = useState([]);
 
 	const [activeSessionId, setActiveSessionId] = useState(null);
+
+	const [isSending, setIsSending] = useState(false);
+
+	// ref для актуального активного диалога: ответ не должен попасть в чужой чат,
+	// если пользователь переключился, пока запрос был в полёте
+	const activeSessionRef = useRef(activeSessionId);
+
+	useEffect(() => {
+		activeSessionRef.current = activeSessionId;
+	}, [activeSessionId]);
 
 	useEffect(() => {
     async function loadSessions() {
@@ -92,6 +102,10 @@ function Mentor() {
 
 		if (!activeSessionId) return;
 
+		if (isSending) return;
+
+		const sessionId = activeSessionId;
+
         setMessages((previousMessages) => [
             ...previousMessages,
             {
@@ -102,24 +116,44 @@ function Mentor() {
 
         setMessage("");
 
-        try {
-            const data = await sendMessage(text, activeSessionId);
+		setIsSending(true);
 
-            setMessages((previousMessages) => [
-                ...previousMessages,
-                {
-                    role: "ai",
-                    text: data.reply
-                }
-            ]);
+        try {
+            const data = await sendMessage(text, sessionId);
+
+            setMessages((previousMessages) => {
+				// пользователь успел переключить диалог — ответ придёт при повторном открытии из истории
+				if (activeSessionRef.current !== sessionId) {
+					return previousMessages;
+				}
+
+                return [
+                    ...previousMessages,
+                    {
+                        role: "ai",
+                        text: data.reply
+                    }
+                ];
+            });
         } catch (error) {
-            setMessages((previousMessages) => [
-                ...previousMessages,
-                {
-                    role: "ai",
-                    text: "Не удалось связаться с сервером. Попробуй ещё раз."
-                }
-            ]);
+			console.error("Ошибка отправки сообщения:", error);
+
+			setMessages((previousMessages) => {
+				if (activeSessionRef.current !== sessionId) {
+					return previousMessages;
+				}
+
+				return [
+					...previousMessages,
+					{
+						role: "ai",
+						isError: true,
+						text: "Не удалось получить ответ. Проверь соединение и попробуй ещё раз."
+					}
+				];
+			});
+        } finally {
+            setIsSending(false);
         }
     }
 
@@ -139,6 +173,7 @@ function Mentor() {
                     message={message}
                     setMessage={setMessage}
                     onSend={handleSend}
+                    isSending={isSending}
                 />
             </div>
         </div>

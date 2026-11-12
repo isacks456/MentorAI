@@ -45,8 +45,17 @@
         cursor: pointer;
         transition: 0.2s;
 
-        &:hover {
+        &:hover:not(:disabled) {
             background-color: #4b83f5;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .send-spinner {
+            animation: send-spin 0.9s linear infinite;
         }
     }
 
@@ -54,5 +63,15 @@
         margin: 10px 0 0;
         color: #747e90;
         font-size: 11px;
+    }
+}
+
+@keyframes send-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
     }
 }

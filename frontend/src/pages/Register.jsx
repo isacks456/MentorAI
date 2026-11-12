@@ -23,13 +23,21 @@ const handleRegister = async (e) => {
 
     try {
         await registerUser(email, password);
-        navigate("/login");
-		await loginUser(email, password);
-		navigate("/");
     } catch (error) {
+        // ошибка регистрации — остаёмся на странице и показываем сообщение
         setError(error.message);
-    } finally {
         setIsLoading(false);
+        return;
+    }
+
+    try {
+        await loginUser(email, password);
+        setIsLoading(false);
+        navigate("/", { replace: true });
+    } catch {
+        // аккаунт создан, но авто-вход не удался — направляем на страницу входа
+        setIsLoading(false);
+        navigate("/login", { replace: true });
     }
 };
 

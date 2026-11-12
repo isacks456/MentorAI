@@ -43,7 +43,11 @@ function AppLayout({ backendMessage, theme, setTheme }) {
       <Sidebar/>
 
       <div className="app-main">
-        <Header title={pageTitles[location.pathname] || "MentorAI"}/>
+        <Header
+          title={pageTitles[location.pathname] || "MentorAI"}
+          theme={theme}
+          setTheme={setTheme}
+        />
 
       <main className="app-content">
         <p className="backend-status">{backendMessage}</p>

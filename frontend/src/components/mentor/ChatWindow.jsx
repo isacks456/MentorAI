@@ -1,7 +1,17 @@
-import { Bot, User } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Bot, User, AlertCircle } from "lucide-react";
 import "./ChatWindow.css";
 
 function ChatWindow({ messages }) {
+    const messagesRef = useRef(null);
+
+    // автопрокрутка к последнему сообщению
+    useEffect(() => {
+        if (messagesRef.current) {
+            messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+        }
+    }, [messages]);
+
     return (
         <section className="chat-window">
             <div className="chat-header">
@@ -16,10 +26,10 @@ function ChatWindow({ messages }) {
                 </span>
             </div>
 
-            <div className="chat-messages">
+            <div className="chat-messages" ref={messagesRef}>
                 {messages.map((item, index) => (
                     <div
-                        className={`message ${item.role}-message`}
+                        className={`message ${item.role}-message ${item.isError ? "error-message" : ""}`}
                         key={index}
                     >
                         <div className="message-avatar">
@@ -34,6 +44,8 @@ function ChatWindow({ messages }) {
                             <span>
                                 {item.role === "user" ? "Ты" : "AI-наставник"}
                             </span>
+
+                            {item.isError && <AlertCircle size={15} className="error-icon" />}
 
                             <p>{item.text}</p>
                         </div>

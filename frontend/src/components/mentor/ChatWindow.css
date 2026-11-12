@@ -114,4 +114,31 @@
             }
         }
     }
+
+    .error-message {
+        .message-avatar {
+            background-color: #4a2733;
+            color: #ff8f9f;
+        }
+
+        .message-content {
+            background-color: #332430;
+            border-color: #5c3140;
+
+            span {
+                color: #ff8f9f;
+            }
+
+            p {
+                color: #f0c3cb;
+            }
+        }
+
+        .error-icon {
+            display: inline-block;
+            margin-right: 6px;
+            margin-bottom: -2px;
+            color: #ff8f9f;
+        }
+    }
 }
