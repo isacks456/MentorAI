@@ -37,6 +37,7 @@ public class TrainingController : ControllerBase
     {
         var tasks = await _db.TrainingTasks
         .Where(task => task.TrainingScenarioId == scenarioId)
+        .OrderBy(task => task.Id)
         .ToListAsync();
         return Ok(tasks);
     }
@@ -208,6 +209,66 @@ public class TrainingController : ControllerBase
             AverageScore = averageScore
         };
         return Ok(progress);
+    }
+
+    [HttpGet("summary")]
+    public async Task<IActionResult> GetSummary()
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        var userAnswers = _db.TrainingAnswers.Where(answer => answer.ApplicationUserId == user.Id);
+
+        var totalAnswers = await userAnswers.CountAsync();
+
+        var completedTasks = await userAnswers.Select(answer => answer.TrainingTaskId)
+            .Distinct()
+            .CountAsync();
+
+        var scoredAnswers = userAnswers.Where(answer => answer.Score.HasValue);
+
+        var averageScore = await scoredAnswers.AnyAsync()
+            ? await scoredAnswers.AverageAsync(answer => (double)answer.Score!.Value)
+            : 0;
+
+        var skillsCount = await scoredAnswers
+            .Join(
+                _db.TrainingTasks,
+                answer => answer.TrainingTaskId,
+                task => task.Id,
+                (answer, task) => task.Skill)
+            .Distinct()
+            .CountAsync();
+
+        var chatSessionsCount = await _db.ChatSessions
+            .CountAsync(session => session.ApplicationUserId == user.Id);
+
+        // дни активности: уникальные даты ответов и диалогов (в памяти — объём данных небольшой)
+        var answerDates = await userAnswers.Select(answer => answer.CreatedAt).ToListAsync();
+        var chatDates = await _db.ChatSessions
+            .Where(session => session.ApplicationUserId == user.Id)
+            .Select(session => session.CreatedAt)
+            .ToListAsync();
+
+        var activeDays = answerDates
+            .Concat(chatDates)
+            .Select(date => date.Date)
+            .Distinct()
+            .Count();
+
+        return Ok(new
+        {
+            totalAnswers,
+            completedTasks,
+            averageScore,
+            skillsCount,
+            chatSessionsCount,
+            activeDays
+        });
     }
 
     [HttpGet("skills")]

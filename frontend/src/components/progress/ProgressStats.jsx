@@ -8,14 +8,16 @@ import { getTrainingProgress } from "../../api/api";
 function ProgressStats()  {
 
 	const [progress, setProgress] = useState(null);
+	const [error, setError] = useState(false);
 
 	useEffect(() => {
     async function loadProgress() {
         try {
             const data = await getTrainingProgress();
             setProgress(data);
-        } catch (error) {
-            console.error(error.message);
+        } catch (err) {
+            console.error(err.message);
+            setError(true);
         }
     }
 
@@ -25,22 +27,24 @@ function ProgressStats()  {
 	const statistics = [
 	{
     title: "Завершено тренировок",
-    value: progress ? progress.completedTasks : "...",
+    value: progress ? progress.completedTasks : (error ? "—" : "..."),
     icon: Target
 	},
 	{
 		title: "Средний результат",
-		value: progress ? `${progress.averageScore}%` : "...",
+		value: progress ? `${progress.averageScore}%` : (error ? "—" : "..."),
 		icon: TrendingUp
 	},
 		{
+			// достоверных данных о времени обучения пока нет (не трекается)
 			title: "Время обучения",
-			value: "8 ч",
+			value: "Нет данных",
 			icon: Clock
 		},
 		{
+			// серия дней не считается искусственно — покажем её только когда появятся реальные данные
 			title: "Текущая серия",
-			value: "5 дней",
+			value: "Нет данных",
 			icon: Flame
 		}
 	];

@@ -207,6 +207,19 @@ export async function getTrainingSkills() {
     return await response.json();
 }
 
+export async function getTrainingSummary() {
+    const response = await fetch(`${API_URL}/api/Training/summary`, {
+        headers: getAuthHeaders()
+    });
+
+    if (!response.ok) {
+        handleAuthError(response);
+        throw new Error("Не удалось загрузить сводку активности");
+    }
+
+    return await response.json();
+}
+
 export async function getRecentActivity() {
     const response = await fetch(`${API_URL}/api/Training/activity`, {
         headers: getAuthHeaders()
