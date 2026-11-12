@@ -114,6 +114,9 @@ namespace MentorAI.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -122,6 +125,8 @@ namespace MentorAI.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("ChatSessions");
                 });
@@ -426,6 +431,15 @@ namespace MentorAI.API.Migrations
                         .HasForeignKey("ChatSessionId");
 
                     b.Navigation("ChatSession");
+                });
+
+            modelBuilder.Entity("MentorAI.API.Models.ChatSession", b =>
+                {
+                    b.HasOne("MentorAI.API.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("MentorAI.API.Models.LearningProfile", b =>

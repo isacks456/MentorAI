@@ -103,8 +103,11 @@ function PersonalInfo() {
             const data = await getProfile();
 
             if (data) {
-                setProfile(data);
-                setSavedProfile(data);
+                // age приходит числом; 0 означает "не указан" (профиль только что создан)
+                const formatted = { ...data, age: data.age > 0 ? String(data.age) : "" };
+
+                setProfile(formatted);
+                setSavedProfile(formatted);
             }
         } catch (error) {
             console.error("Ошибка загрузки профиля:", error);

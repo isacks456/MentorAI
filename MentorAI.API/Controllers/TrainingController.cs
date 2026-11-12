@@ -3,22 +3,26 @@ using Microsoft.EntityFrameworkCore;
 using MentorAI.API.Data;
 using MentorAI.API.Models;
 using MentorAI.API.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace MentorAI.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class TrainingController : ControllerBase
 {
     private readonly ApplicationDbContext _db;
     private readonly TrainingEvaluationService _evaluationService;
-
+    private readonly UserManager<ApplicationUser> _userManager;
     public TrainingController(
     ApplicationDbContext db,
-    TrainingEvaluationService evaluationService)
+    TrainingEvaluationService evaluationService, UserManager<ApplicationUser> userManager)
     {
         _db = db;
         _evaluationService = evaluationService;
+        _userManager = userManager;
     }
 
     [HttpGet("scenarios")]
@@ -48,11 +52,20 @@ public class TrainingController : ControllerBase
     }
 
     var feedback = _evaluationService.Evaluate(request.Answer);
+
+    var user = await _userManager.GetUserAsync(User);
+
+    if (user == null)
+    {
+        return Unauthorized();
+    }
+
     var trainingAnswer = new TrainingAnswer
     {
-    TrainingTaskId = request.TrainingTaskId,
-    Answer = request.Answer,
-    Score = feedback.Score
+        TrainingTaskId = request.TrainingTaskId,
+        Answer = request.Answer,
+        Score = feedback.Score,
+        ApplicationUserId = user.Id,
     };
     
     _db.TrainingAnswers.Add(trainingAnswer);
@@ -71,8 +84,15 @@ public class TrainingController : ControllerBase
     [HttpGet("tasks/{taskId}/answers")]
     public async Task<IActionResult> GetAnswers(int taskId)
     {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
         var answers = await _db.TrainingAnswers
-            .Where(answer => answer.TrainingTaskId == taskId)
+            .Where(answer => answer.TrainingTaskId == taskId && answer.ApplicationUserId == user.Id)
             .OrderByDescending(answer => answer.CreatedAt)
             .ToListAsync();
 
@@ -82,8 +102,15 @@ public class TrainingController : ControllerBase
     [HttpGet("results")]
     public async Task<IActionResult> GetResults()
     {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
         var answers = await _db.TrainingAnswers
-            .Where(answer => answer.Score.HasValue)
+            .Where(answer => answer.ApplicationUserId == user.Id && answer.Score.HasValue)
             .OrderBy(answer => answer.CreatedAt)
             .Select(answer => new
             {
@@ -104,15 +131,22 @@ public class TrainingController : ControllerBase
     [HttpGet("progress")]
     public async Task<IActionResult> GetProgress()
     {
-        var totalAnswers = await _db.TrainingAnswers.CountAsync();
+        var user = await _userManager.GetUserAsync(User);
 
-        var completedTasks = await _db.TrainingAnswers
-            .Select(answer => answer.TrainingTaskId)
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        var userAnswers = _db.TrainingAnswers.Where(answer => answer.ApplicationUserId == user.Id);
+
+        var totalAnswers = await userAnswers.CountAsync();
+
+        var completedTasks = await userAnswers.Select(answer => answer.TrainingTaskId)
             .Distinct()
             .CountAsync();
 
-        var scoredAnswers = _db.TrainingAnswers
-            .Where(answer => answer.Score.HasValue);
+        var scoredAnswers = userAnswers.Where(answer => answer.Score.HasValue);
 
         var averageScore = await scoredAnswers.AnyAsync()
             ? await scoredAnswers.AverageAsync(answer => (double)answer.Score!.Value)
@@ -130,8 +164,16 @@ public class TrainingController : ControllerBase
     [HttpGet("skills")]
     public async Task<IActionResult> GetSkillsProgress()
     {
-        var skills = await _db.TrainingAnswers
-            .Where(answer => answer.Score.HasValue)
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        var skills = await _db.TrainingAnswers.Where(answer =>
+            answer.ApplicationUserId == user.Id &&
+            answer.Score.HasValue)
             .Join(
                 _db.TrainingTasks,
                 answer => answer.TrainingTaskId,

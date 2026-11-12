@@ -16,6 +16,11 @@ public class LearningProfileController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
+
+    // Сериализует создание learning-профилей (защита от гонки
+    // при одновременных запросах из React StrictMode).
+    private static readonly SemaphoreSlim _profileCreationLock = new(1, 1);
+
     public LearningProfileController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
         _context = context;
@@ -36,14 +41,36 @@ public class LearningProfileController : ControllerBase
 
         if (profile == null)
         {
-            return NotFound("Информация об обучении не найдена");
+            await _profileCreationLock.WaitAsync();
+
+            try
+            {
+                // Повторная проверка внутри блокировки
+                profile = await _context.LearningProfiles.FirstOrDefaultAsync(p => p.ApplicationUserId == user.Id);
+
+                if (profile == null)
+                {
+                    profile = new LearningProfile
+                    {
+                        ApplicationUserId = user.Id
+                    };
+
+                    _context.LearningProfiles.Add(profile);
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            finally
+            {
+                _profileCreationLock.Release();
+            }
         }
 
         return Ok(profile);
     }
 
     [HttpPut]
-    public async Task<IActionResult> SaveLearningProfile(LearningProfile updatedProfile)
+    public async Task<IActionResult> SaveLearningProfile([FromBody] LearningProfileUpdateRequest request)
     {
         var user = await _userManager.GetUserAsync(User);
 
@@ -56,22 +83,32 @@ public class LearningProfileController : ControllerBase
 
         if (profile == null)
         {
-            profile = updatedProfile;
-            profile.ApplicationUserId = user.Id;
+            profile = new LearningProfile
+            {
+                ApplicationUserId = user.Id
+            };
             _context.LearningProfiles.Add(profile);
         }
-        else
-        {
-            profile.Goal = updatedProfile.Goal;
-            profile.Direction = updatedProfile.Direction;
-            profile.Position = updatedProfile.Position;
-            profile.Description = updatedProfile.Description;
-			profile.DirectionDescription = updatedProfile.DirectionDescription;
-			profile.PositionDescription = updatedProfile.PositionDescription;
-        }
+
+        profile.Goal = request.Goal;
+        profile.Direction = request.Direction;
+        profile.Position = request.Position;
+        profile.Description = request.Description;
+        profile.DirectionDescription = request.DirectionDescription;
+        profile.PositionDescription = request.PositionDescription;
 
         await _context.SaveChangesAsync();
 
         return Ok(profile);
     }
+}
+
+public record LearningProfileUpdateRequest
+{
+    public string Goal { get; set; } = "";
+    public string Direction { get; set; } = "";
+    public string Position { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string DirectionDescription { get; set; } = "";
+    public string PositionDescription { get; set; } = "";
 }

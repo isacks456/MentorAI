@@ -8,5 +8,7 @@ public class ChatSession
 
 	public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+	public string? ApplicationUserId { get; set; }
+	public ApplicationUser? ApplicationUser { get; set; }
 	public List<ChatMessage> Messages { get; set; } = new();
 }

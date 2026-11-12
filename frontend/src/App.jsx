@@ -5,7 +5,8 @@ import {
     BrowserRouter,
     Routes,
     Route,
-    useLocation
+    useLocation,
+    Navigate
 } from "react-router-dom";
 
 import Header from "./components/layout/Header"
@@ -65,6 +66,16 @@ function AppLayout({ backendMessage, theme, setTheme }) {
   )
 }
 
+function RequireAuth({ children }) {
+  const token = sessionStorage.getItem("mentorai-token");
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
 function App() {
 
   const [backendMessage, setBackendMessage] = useState("Проверяем соединение...");
@@ -108,11 +119,13 @@ useEffect(() => {
         <Route
           path="/*"
           element={
-            <AppLayout
-            backendMessage={backendMessage}
-            theme={theme}
-            setTheme={setTheme}
-            />
+            <RequireAuth>
+              <AppLayout
+              backendMessage={backendMessage}
+              theme={theme}
+              setTheme={setTheme}
+              />
+            </RequireAuth>
           }
         />
       </Routes>

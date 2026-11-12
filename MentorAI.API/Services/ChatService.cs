@@ -1,6 +1,6 @@
 using MentorAI.API.Data;
 using MentorAI.API.Models;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace MentorAI.API.Services;
 
@@ -13,10 +13,12 @@ public class ChatService
 		_db = db;
 	}
 
-	public async Task<string?> SendMessageAsync(ChatRequest request)
+	public async Task<string?> SendMessageAsync(ChatRequest request, string userId)
 	{
 		var session = await _db.ChatSessions
-			.FindAsync(request.ChatSessionId);
+			.FirstOrDefaultAsync(s =>
+        		s.Id == request.ChatSessionId &&
+        		s.ApplicationUserId == userId);
 
 			if(session == null)
 			{

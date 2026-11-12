@@ -120,6 +120,8 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors("ReactFrontend");
 
+app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -134,8 +136,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
 app.MapGet("/api/health", () =>
 {
     return Results.Ok(new
@@ -148,7 +148,9 @@ app.MapGet("/api/health", () =>
 
 app.MapPost("/api/chat", async (
     ChatRequest request,
-    ChatService chatService) =>
+    ChatService chatService,
+    UserManager<ApplicationUser> userManager,
+    System.Security.Claims.ClaimsPrincipal user) =>
 {
     if (string.IsNullOrWhiteSpace(request.Message))
     {
@@ -158,9 +160,19 @@ app.MapPost("/api/chat", async (
         });
     }
 
-    var reply = await chatService.SendMessageAsync(request);
+    var currentUser = await userManager.GetUserAsync(user);
 
-    if(reply == null)
+    if (currentUser == null)
+    {
+        return Results.Unauthorized();
+    }
+
+    var reply = await chatService.SendMessageAsync(
+        request,
+        currentUser.Id
+    );
+
+    if (reply == null)
     {
         return Results.NotFound(new
         {
@@ -172,31 +184,34 @@ app.MapPost("/api/chat", async (
     {
         reply = reply
     });
-});
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
 })
-.WithName("GetWeatherForecast");
+.RequireAuthorization();
 
 app.MapGet("/api/chat/sessions/{sessionId}/messages", async (
     int sessionId,
-    ApplicationDbContext db) =>
+    ApplicationDbContext db,
+    UserManager<ApplicationUser> userManager,
+    System.Security.Claims.ClaimsPrincipal user) =>
 {
+    var currentUser = await userManager.GetUserAsync(user);
+
+    if (currentUser == null)
+    {
+        return Results.Unauthorized();
+    }
+
+    var sessionExists = await db.ChatSessions.AnyAsync(session =>
+        session.Id == sessionId &&
+        session.ApplicationUserId == currentUser.Id);
+
+    if (!sessionExists)
+    {
+        return Results.NotFound(new
+        {
+            error = "Диалог не найден"
+        });
+    }
+
     var messages = await db.ChatMessages
         .Where(message => message.ChatSessionId == sessionId)
         .OrderBy(message => message.Id)
@@ -208,13 +223,25 @@ app.MapGet("/api/chat/sessions/{sessionId}/messages", async (
         .ToListAsync();
 
     return Results.Ok(messages);
-});
+})
+.RequireAuthorization();
 
-app.MapPost("/api/chat/sessions", async (ApplicationDbContext db) =>
+app.MapPost("/api/chat/sessions", async (
+    ApplicationDbContext db,
+    UserManager<ApplicationUser> userManager,
+    System.Security.Claims.ClaimsPrincipal user) =>
 {
+    var currentUser = await userManager.GetUserAsync(user);
+
+    if (currentUser == null)
+    {
+        return Results.Unauthorized();
+    }
+
     var session = new ChatSession
     {
-        Title = "Новый диалог"
+        Title = "Новый диалог",
+        ApplicationUserId = currentUser.Id
     };
 
     db.ChatSessions.Add(session);
@@ -227,11 +254,23 @@ app.MapPost("/api/chat/sessions", async (ApplicationDbContext db) =>
         title = session.Title,
         createdAt = session.CreatedAt
     });
-});
+})
+.RequireAuthorization();
 
-app.MapGet("/api/chat/sessions", async (ApplicationDbContext db) =>
+app.MapGet("/api/chat/sessions", async (
+    ApplicationDbContext db,
+    UserManager<ApplicationUser> userManager,
+    System.Security.Claims.ClaimsPrincipal user) =>
 {
+    var currentUser = await userManager.GetUserAsync(user);
+
+    if (currentUser == null)
+    {
+        return Results.Unauthorized();
+    }
+
     var sessions = await db.ChatSessions
+        .Where(session => session.ApplicationUserId == currentUser.Id)
         .OrderByDescending(session => session.CreatedAt)
         .Select(session => new
         {
@@ -242,11 +281,7 @@ app.MapGet("/api/chat/sessions", async (ApplicationDbContext db) =>
         .ToListAsync();
 
     return Results.Ok(sessions);
-});
+})
+.RequireAuthorization();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
