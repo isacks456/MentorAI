@@ -1,0 +1,112 @@
+.weaknesses {
+    padding: 24px;
+    background-color: #1e222d;
+    border: 1px solid #303542;
+    border-radius: 14px;
+
+    h3 {
+        margin: 0 0 24px;
+        color: #fff;
+        font-size: 18px;
+    }
+
+    .weakness-list,
+    .strengths-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .weakness-item,
+    .strength-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+
+        svg {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        h4 {
+            margin: 0 0 6px;
+            color: #e5eaf2;
+            font-size: 14px;
+        }
+
+        p {
+            margin: 0;
+            color: #9299a8;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+    }
+
+    .weakness-item svg {
+        color: #e9ae55;
+    }
+
+    .strengths-list {
+        margin-top: 22px;
+        padding-top: 20px;
+        border-top: 1px solid #303542;
+    }
+
+    .strength-item svg {
+        color: #4caf85;
+    }
+
+    .recommendation {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        margin-top: 22px;
+        padding: 15px;
+        background-color: #202b40;
+        border: 1px solid #303d55;
+        border-radius: 9px;
+
+        svg {
+            flex-shrink: 0;
+            color: #70a5ff;
+        }
+
+        p {
+            margin: 0;
+            color: #aabbd5;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+    }
+    .developing-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+    .developing-list > h4 {
+        margin: 0;
+        color: #e5b85c;
+        font-size: 15px;
+    }
+
+    .developing-item {
+        padding: 14px;
+        background-color: #292c35;
+        border: 1px solid #48413a;
+        border-radius: 10px;
+    }
+
+    .developing-item h4 {
+        margin: 0 0 6px;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .developing-item p {
+        margin: 0;
+        color: #a6aab5;
+        font-size: 13px;
+    }
+}

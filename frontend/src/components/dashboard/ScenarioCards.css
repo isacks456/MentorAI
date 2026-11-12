@@ -1,0 +1,71 @@
+.scenario-cards {
+	.scenario-list {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 20px;
+	}
+
+	.scenario-card {
+		display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: 230px;
+        padding: 24px;
+		margin: 10px;
+        background-color: #1e222d;
+        border: 1px solid #303542;
+        border-radius: 14px;
+        transition: 0.2s ease;
+
+        &:hover {
+            border-color: #3978f6;
+            transform: translateY(-4px);
+            background-color: #222938;
+        }
+
+        svg {
+            margin-bottom: 18px;
+            color: #4d8dff;
+        }
+
+        h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        p {
+            margin: 0 0 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #9299a8;
+        }
+
+        a {
+            margin-top: auto;
+            color: #5592ff;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+
+            &:hover {
+                color: #8ab4ff;
+            }
+		}
+	}
+
+}
+
+
+@media (max-width: 1000px) {
+    .scenario-cards .scenarios-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .scenario-cards .scenarios-list {
+        grid-template-columns: 1fr;
+    }
+}

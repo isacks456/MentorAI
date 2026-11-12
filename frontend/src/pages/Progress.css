@@ -1,0 +1,35 @@
+.progress-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    color: #f1f5f9;
+
+    .progress-heading {
+        h2 {
+            margin: 0 0 8px;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        p {
+            margin: 0;
+            color: #9299a8;
+            font-size: 14px;
+        }
+    }
+
+    .progress-bottom {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 900px) {
+    .progress-page {
+        .progress-bottom {
+            grid-template-columns: 1fr;
+        }
+    }
+}

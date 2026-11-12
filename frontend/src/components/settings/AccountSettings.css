@@ -1,0 +1,137 @@
+.account-settings {
+    padding: 24px;
+    background-color: #1e222d;
+    border: 1px solid #303542;
+    border-radius: 14px;
+
+    .account-settings-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+
+        h3 {
+            margin: 0 0 7px;
+            color: #f1f5f9;
+            font-size: 17px;
+        }
+
+        p {
+            margin: 0;
+            color: #9299a8;
+            font-size: 12px;
+        }
+
+        > svg {
+            color: #65a0ff;
+        }
+    }
+
+    .account-settings-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .account-setting-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 17px 0;
+        border-bottom: 1px solid #303542;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .account-setting-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            background-color: #252b38;
+            border-radius: 10px;
+            color: #65a0ff;
+        }
+
+        .account-setting-info {
+            flex: 1;
+
+            span {
+                display: block;
+                margin-bottom: 6px;
+                color: #9299a8;
+                font-size: 11px;
+            }
+
+            p {
+                margin: 0;
+                color: #f1f5f9;
+                font-size: 13px;
+            }
+
+            input {
+                width: 100%;
+                padding: 9px 11px;
+
+                background-color: #252b38;
+                border: 1px solid #343d4d;
+                border-radius: 7px;
+
+                color: #f1f5f9;
+                font-size: 13px;
+                outline: none;
+
+                transition: 0.2s ease;
+
+                &:focus {
+                    border-color: #3978f6;
+                    box-shadow: 0 0 0 2px rgba(57, 120, 246, 0.12);
+                }
+
+                &::placeholder {
+                    color: #9299a8;
+                }
+            }
+        }
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 35px;
+            width: auto;
+            height: 35px;
+            padding: 0 10px;
+            white-space: nowrap;
+            background-color: #252b38;
+            border: 1px solid #343d4d;
+            border-radius: 8px;
+            color: #9299a8;
+            cursor: pointer;
+            transition: 0.2s ease;
+
+            &:hover {
+                color: #65a0ff;
+                border-color: #3978f6;
+            }
+        }
+        .cancel-edit-button {
+            color: #f87171 !important;
+            border-color: rgba(248, 113, 113, 0.3) !important;
+
+            &:hover {
+                color: #fca5a5 !important;
+                border-color: #f87171 !important;
+                background-color: rgba(248, 113, 113, 0.08);
+            }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .account-settings {
+        padding: 18px;
+    }
+}

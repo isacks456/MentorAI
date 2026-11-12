@@ -1,0 +1,54 @@
+.knowledge-header {
+    padding: 24px;
+    background-color: #1e222d;
+    border: 1px solid #303542;
+    border-radius: 14px;
+
+    .knowledge-header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .knowledge-title {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        > svg {
+            flex-shrink: 0;
+            color: #5592ff;
+        }
+
+        h2 {
+            margin: 0 0 7px;
+            color: #fff;
+            font-size: 23px;
+        }
+
+        p {
+            margin: 0;
+            color: #9299a8;
+            font-size: 13px;
+        }
+    }
+
+    .knowledge-ai-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #65a0ff;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 650px) {
+    .knowledge-header {
+        .knowledge-header-content {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+}

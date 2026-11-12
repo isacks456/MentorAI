@@ -1,0 +1,145 @@
+.learning-info {
+    padding: 24px;
+    background-color: #1e222d;
+    border: 1px solid #303542;
+    border-radius: 14px;
+
+    .learning-info-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+
+        h3 {
+            margin: 0 0 7px;
+            color: #f1f5f9;
+            font-size: 17px;
+        }
+
+        p {
+            margin: 0;
+            color: #9299a8;
+            font-size: 12px;
+        }
+
+        > svg {
+            color: #65a0ff;
+        }
+    }
+
+    .learning-info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .learning-info-card {
+        padding: 18px;
+        background-color: #252b38;
+        border: 1px solid #303542;
+        border-radius: 11px;
+        transition: 0.2s ease;
+
+        &:hover {
+            border-color: #3978f6;
+        }
+
+        .learning-info-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            margin-bottom: 16px;
+            background-color: #20365b;
+            border-radius: 9px;
+            color: #65a0ff;
+        }
+
+        span {
+            color: #9299a8;
+            font-size: 11px;
+        }
+
+        h4 {
+            margin: 9px 0;
+            color: #f1f5f9;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        p {
+            margin: 0;
+            color: #9299a8;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #303542;
+            border-radius: 7px;
+            outline: none;
+            background-color: #1e222d;
+            color: #f1f5f9;
+            font-size: 12px;
+            font-family: inherit;
+
+            &:focus {
+                border-color: #3978f6;
+            }
+        }
+
+        textarea {
+            min-height: 75px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+    }
+        .learning-info-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+        button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 12px;
+            border: 1px solid #303542;
+            border-radius: 8px;
+            background-color: #252b38;
+            color: #f1f5f9;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s ease;
+
+            &:hover {
+                border-color: #3978f6;
+                background-color: #20365b;
+            }
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    .learning-info {
+        .learning-info-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .learning-info {
+        padding: 18px;
+
+        .learning-info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+}

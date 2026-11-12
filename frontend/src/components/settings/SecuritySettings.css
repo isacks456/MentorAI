@@ -1,0 +1,200 @@
+.security-settings {
+    padding: 24px;
+    background-color: #1e222d;
+    border: 1px solid #303542;
+    border-radius: 14px;
+
+    .security-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+
+        h3 {
+            margin: 0 0 7px;
+            color: #f1f5f9;
+            font-size: 17px;
+        }
+
+        p {
+            margin: 0;
+            color: #9299a8;
+            font-size: 12px;
+        }
+
+        > svg {
+            color: #65a0ff;
+        }
+    }
+
+    .security-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .security-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        padding: 17px 0;
+        background: none;
+        border: none;
+        border-bottom: 1px solid #303542;
+        text-align: left;
+        cursor: pointer;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .security-item-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            background-color: #252b38;
+            border-radius: 10px;
+            color: #65a0ff;
+        }
+
+        .security-item-info {
+            flex: 1;
+
+            h4 {
+                margin: 0 0 6px;
+                color: #f1f5f9;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            p {
+                margin: 0;
+                color: #9299a8;
+                font-size: 11px;
+            }
+        }
+
+        > svg {
+            color: #9299a8;
+            transition: 0.2s ease;
+        }
+
+        &:hover {
+            .security-item-info h4,
+            > svg {
+                color: #65a0ff;
+            }
+        }
+    }
+
+    .security-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 22px;
+        padding-top: 20px;
+        border-top: 1px solid #303542;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .logout-button {
+            background-color: #252b38;
+            border: 1px solid #343d4d;
+            color: #f1f5f9;
+
+            &:hover {
+                border-color: #3978f6;
+                color: #65a0ff;
+            }
+        }
+
+        .delete-account-button {
+            background-color: #38252b;
+            border: 1px solid #59333c;
+            color: #f08080;
+
+            &:hover {
+                background-color: #492b33;
+                border-color: #d65b69;
+            }
+        }
+    }
+
+    .security-data {
+        margin: 15px 0;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+
+        h3 {
+            margin: 15px 0 10px;
+            color: #f1f5f9;
+            font-size: 16px;
+
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+
+        p {
+            margin: 8px 0;
+            color: #aeb8c8;
+            font-size: 14px;
+        }
+    }
+
+    .export-data-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+
+        margin-top: 20px;
+        padding: 11px 16px;
+
+        background: rgba(99, 102, 241, 0.12);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 9px;
+
+        color: #a5b4fc;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s ease;
+
+        &:hover:not(:disabled) {
+            background: rgba(99, 102, 241, 0.22);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .security-settings {
+        padding: 18px;
+
+        .security-actions {
+            flex-direction: column;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+}

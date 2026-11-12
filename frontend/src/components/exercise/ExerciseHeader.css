@@ -1,0 +1,53 @@
+.exercise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+    background-color: #1e222d;
+    border: 1px solid #303542;
+    border-radius: 14px;
+
+    h2 {
+        margin: 0 0 8px;
+        font-size: 24px;
+        color: #ffffff;
+    }
+
+    p {
+        margin: 0;
+        font-size: 14px;
+        color: #9299a8;
+    }
+
+    .exercise-info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .exercise-progress,
+    .exercise-time {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 13px;
+        color: #aeb6c5;
+
+        svg {
+            color: #5592ff;
+        }
+    }
+}
+
+@media (max-width: 700px) {
+    .exercise-header {
+        align-items: flex-start;
+        flex-direction: column;
+
+        .exercise-info {
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+    }
+}

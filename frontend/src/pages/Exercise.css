@@ -1,0 +1,11 @@
+.exercise-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    color: #f1f5f9;
+
+    h2, h3, p {
+        margin-top: 0;
+    }
+}

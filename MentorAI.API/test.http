@@ -1,0 +1,13 @@
+POST http://localhost:5056/api/Training/answer
+Content-Type: application/json
+
+{
+    "trainingTaskId": 2,
+    "answer": "Замыкание — это функция, которая запоминает переменные из внешней области видимости."
+}
+
+### Получение статистики обучения
+GET http://localhost:5056/api/Training/progress
+
+### Получение результатов для графика
+GET http://localhost:5056/api/Training/skills

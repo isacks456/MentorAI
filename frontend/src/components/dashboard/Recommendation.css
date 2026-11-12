@@ -1,0 +1,42 @@
+.recommendations {
+	padding: 24px;
+    background-color: #1e222d;
+    border: 1px solid #303542;
+    border-radius: 14px;
+
+    h2 {
+        margin-bottom: 22px;
+    }
+
+    .recommendations-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .recommendation-item {
+        padding: 16px;
+        background-color: #252b38;
+        border: 1px solid #343d4d;
+        border-radius: 10px;
+        transition: 0.2s ease;
+
+        &:hover {
+            border-color: #3978f6;
+        }
+
+        h3 {
+            margin: 0 0 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e8edf5;
+        }
+
+        p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #9299a8;
+        }
+    }
+}

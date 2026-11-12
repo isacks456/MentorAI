@@ -1,0 +1,93 @@
+.knowledge-categories {
+    .categories-heading {
+        margin-bottom: 18px;
+		margin-top: 15px;
+
+        h3 {
+            margin: 0 0 7px;
+            color: #f1f5f9;
+            font-size: 18px;
+        }
+
+        p {
+            margin: 0;
+            color: #9299a8;
+            font-size: 13px;
+        }
+    }
+
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .category-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        min-width: 0;
+        padding: 20px;
+        text-align: left;
+        background-color: #1e222d;
+        border: 1px solid #303542;
+        border-radius: 12px;
+        color: #f1f5f9;
+        cursor: pointer;
+        transition: 0.2s ease;
+
+        &:hover {
+            border-color: #3978f6;
+            background-color: #252b38;
+            transform: translateY(-2px);
+        }
+
+        .category-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            flex-shrink: 0;
+            background-color: #20365b;
+            border-radius: 10px;
+            color: #65a0ff;
+        }
+
+        .category-info {
+            min-width: 0;
+
+            h4 {
+                margin: 2px 0 7px;
+                color: #fff;
+                font-size: 14px;
+            }
+
+            p {
+                margin: 0;
+                color: #9299a8;
+                font-size: 12px;
+                line-height: 1.6;
+            }
+        }
+    }
+
+    .category-card.active {
+    background-color: #292f40;
+    border-color: #65a0ff;
+}
+
+.category-card.active .category-icon {
+    background-color: #65a0ff;
+    color: #fff;
+}
+
+}
+
+@media (max-width: 850px) {
+    .knowledge-categories {
+        .categories-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+}

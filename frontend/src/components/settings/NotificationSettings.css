@@ -1,0 +1,108 @@
+.notification-settings {
+    padding: 24px;
+    background-color: #1e222d;
+    border: 1px solid #303542;
+    border-radius: 14px;
+
+    .notification-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+
+        h3 {
+            margin: 0 0 7px;
+            color: #f1f5f9;
+            font-size: 17px;
+        }
+
+        p {
+            margin: 0;
+            color: #9299a8;
+            font-size: 12px;
+        }
+
+        > svg {
+            color: #65a0ff;
+        }
+    }
+
+    .notification-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .notification-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 17px 0;
+        border-bottom: 1px solid #303542;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            background-color: #252b38;
+            border-radius: 10px;
+            color: #65a0ff;
+        }
+
+        .notification-info {
+            flex: 1;
+
+            h4 {
+                margin: 0 0 6px;
+                color: #f1f5f9;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            p {
+                margin: 0;
+                color: #9299a8;
+                font-size: 11px;
+            }
+        }
+
+        .notification-switch {
+            display: flex;
+            align-items: center;
+            width: 42px;
+            height: 23px;
+            padding: 3px;
+            background-color: #343d4d;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s ease;
+            border: none;
+            flex-shrink: 0;
+
+            span {
+                width: 17px;
+                height: 17px;
+                background-color: #fff;
+                border-radius: 50%;
+                transition: 0.2s ease;
+            }
+
+            &.active {
+                justify-content: flex-end;
+                background-color: #3978f6;
+            }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .notification-settings {
+        padding: 18px;
+    }
+}
