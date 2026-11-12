@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import materials from "../../data/knowledgeMaterials";
+import { filterMaterials } from "../../data/knowledgeMaterials";
 
 import { FileText, Clock3, ArrowRight } from "lucide-react";
 
@@ -10,17 +10,7 @@ function KnowledgeList({ activeCategory, searchQuery }) {
 
     const navigate = useNavigate();
 
-    const filteredMaterials = materials.filter(item => {
-    const matchesCategory = activeCategory
-        ? item.category === activeCategory
-        : true;
-
-    const matchesSearch =
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchQuery.toLowerCase());
-
-        return matchesCategory && matchesSearch;
-    });
+    const filteredMaterials = filterMaterials(activeCategory, searchQuery);
 
     return (
         <section className="knowledge-list">

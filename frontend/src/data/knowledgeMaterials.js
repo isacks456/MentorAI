@@ -90,4 +90,22 @@ const materials = [
     }
 ];
 
+export const categories = [...new Set(materials.map(item => item.category))];
+
+export function filterMaterials(activeCategory, searchQuery) {
+    const query = searchQuery.toLowerCase();
+
+    return materials.filter(item => {
+        const matchesCategory = activeCategory
+            ? item.category === activeCategory
+            : true;
+
+        const matchesSearch =
+            item.title.toLowerCase().includes(query) ||
+            item.description.toLowerCase().includes(query);
+
+        return matchesCategory && matchesSearch;
+    });
+}
+
 export default materials;

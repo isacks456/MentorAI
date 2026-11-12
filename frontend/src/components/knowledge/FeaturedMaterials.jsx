@@ -1,28 +1,23 @@
+import { useNavigate } from "react-router-dom";
 import { BookOpen, Clock3, ArrowUpRight } from "lucide-react";
+
+import materials from "../../data/knowledgeMaterials";
 
 import "./FeaturedMaterials.css";
 
+// популярное: по одному материалу на каждую категорию
+const FEATURED_IDS = [1, 2, 4];
+
 function FeaturedMaterials() {
-    const materials = [
-        {
-            title: "Как составить резюме без опыта работы",
-            description: "Разберись, как правильно представить свои навыки, учебные проекты и достижения.",
-            category: "Первая работа",
-            readTime: "5 минут"
-        },
-        {
-            title: "Подготовка к техническому собеседованию",
-            description: "Узнай, какие вопросы задают начинающим разработчикам и как на них отвечать.",
-            category: "Первая работа",
-            readTime: "8 минут"
-        },
-        {
-            title: "Как выбрать направление обучения",
-            description: "Разберись в образовательных направлениях и критериях выбора специальности.",
-            category: "Поступление",
-            readTime: "6 минут"
-        }
-    ];
+    const navigate = useNavigate();
+
+    const featuredMaterials = FEATURED_IDS
+        .map(id => materials.find(item => item.id === id))
+        .filter(Boolean);
+
+    if (featuredMaterials.length === 0) {
+        return null;
+    }
 
     return (
         <section className="featured-materials">
@@ -34,9 +29,9 @@ function FeaturedMaterials() {
             </div>
 
             <div className="featured-grid">
-                {materials.map((item, index) => {
+                {featuredMaterials.map((item) => {
                     return (
-                        <article className="featured-card" key={index}>
+                        <article className="featured-card" key={item.id}>
                             <div className="featured-card-top">
                                 <div className="featured-icon">
                                     <BookOpen size={21} />
@@ -59,7 +54,11 @@ function FeaturedMaterials() {
                                     {item.readTime}
                                 </span>
 
-                                <button type="button" aria-label="Открыть материал">
+                                <button
+                                    type="button"
+                                    aria-label={`Открыть материал: ${item.title}`}
+                                    onClick={() => navigate(`/knowledge/${item.id}`)}
+                                >
                                     <ArrowUpRight size={18} />
                                 </button>
                             </div>

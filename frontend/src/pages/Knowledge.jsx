@@ -7,6 +7,8 @@ import KnowledgeCategories from "../components/knowledge/KnowledgeCategories";
 import FeaturedMaterials from "../components/knowledge/FeaturedMaterials";
 import KnowledgeList from "../components/knowledge/KnowledgeList";
 
+import { filterMaterials } from "../data/knowledgeMaterials";
+
 import "./Knowledge.css";
 
 function Knowledge() {
@@ -29,6 +31,13 @@ function Knowledge() {
         setSearchParams(value ? { q: value } : {}, { replace: true });
     };
 
+    const handleResetFilters = () => {
+        setActiveCategory(null);
+        handleSearchChange("");
+    };
+
+    const foundCount = filterMaterials(activeCategory, searchQuery).length;
+
     return (
         <div className="knowledge-page">
             <KnowledgeHeader />
@@ -36,6 +45,10 @@ function Knowledge() {
             <KnowledgeSearch
                 searchQuery={searchQuery}
                 setSearchQuery={handleSearchChange}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+                foundCount={foundCount}
+                onResetFilters={handleResetFilters}
             />
 
             <KnowledgeCategories
