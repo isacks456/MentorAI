@@ -2,6 +2,7 @@ using MentorAI.API.Data;
 using MentorAI.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -86,6 +87,17 @@ public class ProfileController : ControllerBase
 			return Unauthorized();
 		}
 
+		// [Required] пропускает строки из одних пробелов — проверяем вручную
+		if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.Email))
+		{
+			return BadRequest(new ProblemDetails
+			{
+				Status = 400,
+				Title = "Некорректный запрос",
+				Detail = "Имя и email не могут быть пустыми"
+			});
+		}
+
 		var profile = await _context.UserProfiles.FirstOrDefaultAsync(p => p.ApplicationUserId == user.Id);
 
 		if (profile == null)
@@ -111,9 +123,22 @@ public class ProfileController : ControllerBase
 
 public record UserProfileUpdateRequest
 {
+	[Required(ErrorMessage = "Имя не может быть пустым")]
+	[MaxLength(100, ErrorMessage = "Имя не может быть длиннее 100 символов")]
 	public string Name { get; set; } = "";
+
+	[Required(ErrorMessage = "Email не может быть пустым")]
+	[EmailAddress(ErrorMessage = "Введите корректный адрес электронной почты")]
+	[MaxLength(100, ErrorMessage = "Email не может быть длиннее 100 символов")]
 	public string Email { get; set; } = "";
+
+	// 0 означает "возраст не указан" (совместимость с существующим профилем)
+	[Range(0, 120, ErrorMessage = "Возраст должен быть от 1 до 120 или не указан")]
 	public int Age { get; set; }
+
+	[MaxLength(100, ErrorMessage = "Курс не может быть длиннее 100 символов")]
 	public string Course { get; set; } = "";
+
+	[MaxLength(100, ErrorMessage = "Учебное заведение не может быть длиннее 100 символов")]
 	public string Institution { get; set; } = "";
 }

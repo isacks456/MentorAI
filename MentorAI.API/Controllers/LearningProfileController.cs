@@ -2,6 +2,7 @@ using MentorAI.API.Data;
 using MentorAI.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -105,10 +106,21 @@ public class LearningProfileController : ControllerBase
 
 public record LearningProfileUpdateRequest
 {
-    public string Goal { get; set; } = "";
-    public string Direction { get; set; } = "";
-    public string Position { get; set; } = "";
-    public string Description { get; set; } = "";
-    public string DirectionDescription { get; set; } = "";
-    public string PositionDescription { get; set; } = "";
+	[MaxLength(200, ErrorMessage = "Цель не может быть длиннее 200 символов")]
+	public string Goal { get; set; } = "";
+
+	[MaxLength(100, ErrorMessage = "Направление не может быть длиннее 100 символов")]
+	public string Direction { get; set; } = "";
+
+	[MaxLength(100, ErrorMessage = "Позиция не может быть длиннее 100 символов")]
+	public string Position { get; set; } = "";
+
+	[MaxLength(1000, ErrorMessage = "Описание не может быть длиннее 1000 символов")]
+	public string Description { get; set; } = "";
+
+	[MaxLength(1000, ErrorMessage = "Описание направления не может быть длиннее 1000 символов")]
+	public string DirectionDescription { get; set; } = "";
+
+	[MaxLength(1000, ErrorMessage = "Описание позиции не может быть длиннее 1000 символов")]
+	public string PositionDescription { get; set; } = "";
 }

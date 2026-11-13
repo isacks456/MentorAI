@@ -49,7 +49,24 @@ public class TrainingController : ControllerBase
 
     if (task == null)
     {
-        return NotFound("Задание не найдено");
+        return NotFound(new ProblemDetails
+        {
+            Status = 404,
+            Title = "Не найдено",
+            Detail = "Задание не найдено"
+        });
+    }
+
+    // защита от обхода атрибутов через прямой HTTP-запрос:
+    // [Required] пропускает строку из одних пробелов
+    if (string.IsNullOrWhiteSpace(request.Answer))
+    {
+        return BadRequest(new ProblemDetails
+        {
+            Status = 400,
+            Title = "Некорректный запрос",
+            Detail = "Ответ не может быть пустым"
+        });
     }
 
     var feedback = _evaluationService.Evaluate(request.Answer);

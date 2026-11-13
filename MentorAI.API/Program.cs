@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MentorAI.API.Data;
 using MentorAI.API.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using MentorAI.API.Services;
 using System.Net.NetworkInformation;
 
@@ -34,7 +35,30 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddScoped<TrainingEvaluationService>();
 
+// единый формат ошибок API — ProblemDetails (RFC 9457)
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = context =>
+    {
+        // не раскрываем внутренности сервера: без stack trace, путей и секретов
+        if (context.ProblemDetails.Status == 500)
+        {
+            context.ProblemDetails.Title = "Внутренняя ошибка сервера";
+            context.ProblemDetails.Detail = "Что-то пошло не так. Попробуй позже.";
+        }
+    };
+});
+
+// защита от чрезмерно длинных запросов
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 1 * 1024 * 1024; // 1 МБ
+});
+
 var app = builder.Build();
+
+// отключаем страницу разработчика со stack trace — ошибки всегда в ProblemDetails
+((IApplicationBuilder)app).Properties["UseDeveloperExceptionPage"] = false;
 
 using (var scope = app.Services.CreateScope())
 {
@@ -120,6 +144,39 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors("ReactFrontend");
 
+// необработанные исключения -> ProblemDetails без stack trace;
+// ошибки клиента (например, невалидный JSON) -> 400, а не 500
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var feature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+        var exception = feature?.Error;
+
+        var status = 500;
+        var title = "Внутренняя ошибка сервера";
+        var detail = "Что-то пошло не так. Попробуй позже.";
+
+        if (exception is Microsoft.AspNetCore.Http.BadHttpRequestException ||
+            exception is System.Text.Json.JsonException)
+        {
+            status = 400;
+            title = "Некорректный запрос";
+            detail = "Тело запроса содержит невалидный JSON или имеет неверный формат";
+        }
+
+        context.Response.StatusCode = status;
+        context.Response.ContentType = "application/problem+json";
+
+        await context.Response.WriteAsJsonAsync(new ProblemDetails
+        {
+            Status = status,
+            Title = title,
+            Detail = detail
+        });
+    });
+});
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -152,12 +209,21 @@ app.MapPost("/api/chat", async (
     UserManager<ApplicationUser> userManager,
     System.Security.Claims.ClaimsPrincipal user) =>
 {
+    // минимальные API не запускают DataAnnotations-валидацию автоматически — проверяем вручную
     if (string.IsNullOrWhiteSpace(request.Message))
     {
-        return Results.BadRequest(new
-        {
-            error = "Сообщение не может быть пустым"
-        });
+        return Results.Problem(
+            statusCode: 400,
+            title: "Некорректный запрос",
+            detail: "Сообщение не может быть пустым");
+    }
+
+    if (request.Message.Length > 4000)
+    {
+        return Results.Problem(
+            statusCode: 400,
+            title: "Некорректный запрос",
+            detail: "Сообщение не может быть длиннее 4000 символов");
     }
 
     var currentUser = await userManager.GetUserAsync(user);
@@ -174,10 +240,10 @@ app.MapPost("/api/chat", async (
 
     if (reply == null)
     {
-        return Results.NotFound(new
-        {
-            error = "Диалог не найден"
-        });
+        return Results.Problem(
+            statusCode: 404,
+            title: "Не найдено",
+            detail: "Диалог не найден");
     }
 
     return Results.Ok(new
@@ -206,10 +272,10 @@ app.MapGet("/api/chat/sessions/{sessionId}/messages", async (
 
     if (!sessionExists)
     {
-        return Results.NotFound(new
-        {
-            error = "Диалог не найден"
-        });
+        return Results.Problem(
+            statusCode: 404,
+            title: "Не найдено",
+            detail: "Диалог не найден");
     }
 
     var messages = await db.ChatMessages
