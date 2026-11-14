@@ -1,7 +1,7 @@
 .skills-progress {
 	padding: 24px;
-	background-color: #1e222d;
-	border: 1px solid #303542;
+	background-color: var(--bg-card);
+	border: 1px solid var(--border);
     border-radius: 14px;
 
 	h3 {
@@ -12,7 +12,7 @@
 
 	.skills-description {
         margin: 0 0 25px;
-        color: #9299a8;
+        color: var(--text-secondary);
         font-size: 13px;
     }
 
@@ -40,12 +40,12 @@
         gap: 12px;
 
         span:first-child {
-            color: #d5dbe6;
+            color: var(--text-secondary);
             font-size: 13px;
         }
 
         span:last-child {
-            color: #65a0ff;
+            color: var(--accent);
             font-size: 13px;
             font-weight: 600;
         }
@@ -53,14 +53,14 @@
     .skill-progress-bar {
         width: 100%;
         height: 8px;
-        background-color: #303542;
+        background-color: var(--border);
         border-radius: 10px;
         overflow: hidden;
     }
 
     .skill-progress-fill {
         height: 100%;
-        background-color: #65a0ff;
+        background-color: var(--accent);
         border-radius: 10px;
         transition: width 0.3s ease;
     }

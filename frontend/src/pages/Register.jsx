@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { BrainCircuit } from "lucide-react";
 import { registerUser, loginUser } from "../api/auth";
+import "../styles/auth.css";
 
 function Register() {
 const navigate = useNavigate();
@@ -42,44 +44,52 @@ const handleRegister = async (e) => {
 };
 
 return (
-    <div>
-        <h1>Регистрация в MentorAI</h1>
+    <div className="auth-page">
+        <div className="auth-card">
+            <div className="auth-logo">
+                <BrainCircuit size={22} />
+                MentorAI
+            </div>
 
-        <form onSubmit={handleRegister}>
-            <input
-                type="email"
-                placeholder="Электронная почта"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
+            <h1>Регистрация</h1>
+            <p className="auth-subtitle">Создай аккаунт и начни путь с персональным наставником</p>
 
-            <input
-                type="password"
-                placeholder="Пароль"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
+            <form onSubmit={handleRegister}>
+                <input
+                    type="email"
+                    placeholder="Электронная почта"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
 
-            <input
-                type="password"
-                placeholder="Повторите пароль"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-            />
+                <input
+                    type="password"
+                    placeholder="Пароль"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
 
-            {error && <p>{error}</p>}
+                <input
+                    type="password"
+                    placeholder="Повторите пароль"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                />
 
-            <button type="submit" disabled={isLoading}>
-                {isLoading ? "Регистрируем..." : "Зарегистрироваться"}
-            </button>
-        </form>
+                {error && <p className="auth-error" role="alert">{error}</p>}
 
-        <p>
-            Уже есть аккаунт? <Link to="/login">Войти</Link>
-        </p>
+                <button className="auth-submit" type="submit" disabled={isLoading}>
+                    {isLoading ? "Регистрируем..." : "Зарегистрироваться"}
+                </button>
+            </form>
+
+            <p className="auth-switch">
+                Уже есть аккаунт? <Link to="/login">Войти</Link>
+            </p>
+        </div>
     </div>
 );
 }

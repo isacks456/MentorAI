@@ -12,45 +12,45 @@
         min-height: 230px;
         padding: 24px;
 		margin: 10px;
-        background-color: #1e222d;
-        border: 1px solid #303542;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
         border-radius: 14px;
         transition: 0.2s ease;
 
         &:hover {
-            border-color: #3978f6;
+            border-color: var(--accent);
             transform: translateY(-4px);
-            background-color: #222938;
+            background-color: var(--bg-card-alt);
         }
 
         svg {
             margin-bottom: 18px;
-            color: #4d8dff;
+            color: var(--accent);
         }
 
         h3 {
             margin: 0 0 10px;
             font-size: 18px;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         p {
             margin: 0 0 20px;
             font-size: 14px;
             line-height: 1.6;
-            color: #9299a8;
+            color: var(--text-secondary);
         }
 
         a {
             margin-top: auto;
-            color: #5592ff;
+            color: var(--accent);
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
             transition: 0.2s;
 
             &:hover {
-                color: #8ab4ff;
+                color: var(--accent);
             }
 		}
 	}
@@ -58,13 +58,13 @@
 }
 
 
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
     .scenario-cards .scenarios-list {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .scenario-cards .scenarios-list {
         grid-template-columns: 1fr;
     }

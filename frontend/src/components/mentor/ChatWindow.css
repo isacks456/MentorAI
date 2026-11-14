@@ -5,8 +5,8 @@
     flex-direction: column;
     min-height: 0;
     overflow: hidden;
-    background-color: #1e222d;
-    border: 1px solid #303542;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 14px;
 
     .chat-header {
@@ -15,17 +15,17 @@
         align-items: center;
         gap: 16px;
         padding: 20px 24px;
-        border-bottom: 1px solid #303542;
+        border-bottom: 1px solid var(--border);
 
         h2 {
             margin: 0 0 6px;
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-size: 19px;
         }
 
         p {
             margin: 0;
-            color: #858d9d;
+            color: var(--text-secondary);
             font-size: 13px;
         }
     }
@@ -34,14 +34,14 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        color: #57d99b;
+        color: var(--success);
         font-size: 12px;
     }
 
     .status-dot {
         width: 8px;
         height: 8px;
-        background-color: #57d99b;
+        background-color: var(--success);
         border-radius: 50%;
     }
 
@@ -52,6 +52,12 @@
         gap: 26px;
         overflow-y: auto;
         padding: 28px 24px;
+    }
+
+    /* в мобильном/планшетном режиме (страница чата складывается в стек)
+       лента сообщений получает минимальную высоту */
+    @media (max-width: 900px) {
+        min-height: 320px;
     }
 
     .message {
@@ -68,28 +74,28 @@
         flex-shrink: 0;
         width: 38px;
         height: 38px;
-        background-color: #29364e;
+        background-color: var(--accent-soft);
         border-radius: 10px;
-        color: #65a0ff;
+        color: var(--accent);
     }
 
     .message-content {
         padding: 14px 16px;
-        background-color: #252b38;
-        border: 1px solid #343d4d;
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--border-strong);
         border-radius: 0 12px 12px 12px;
 
         span {
             display: block;
             margin-bottom: 8px;
-            color: #65a0ff;
+            color: var(--accent);
             font-size: 12px;
             font-weight: 600;
         }
 
         p {
             margin: 0;
-            color: #d5dbe6;
+            color: var(--text-secondary);
             font-size: 14px;
             line-height: 1.7;
         }
@@ -100,37 +106,37 @@
         flex-direction: row-reverse;
 
         .message-avatar {
-            background-color: #203b69;
-            color: #8ab4ff;
+            background-color: var(--accent-soft-strong);
+            color: var(--accent);
         }
 
         .message-content {
-            background-color: #243b60;
-            border-color: #31558a;
+            background-color: var(--accent-soft-strong);
+            border-color: var(--accent);
             border-radius: 12px 0 12px 12px;
 
             span {
-                color: #8ab4ff;
+                color: var(--accent);
             }
         }
     }
 
     .error-message {
         .message-avatar {
-            background-color: #4a2733;
-            color: #ff8f9f;
+            background-color: var(--danger-soft);
+            color: var(--danger);
         }
 
         .message-content {
-            background-color: #332430;
-            border-color: #5c3140;
+            background-color: var(--danger-soft);
+            border-color: var(--danger-soft);
 
             span {
-                color: #ff8f9f;
+                color: var(--danger);
             }
 
             p {
-                color: #f0c3cb;
+                color: var(--danger);
             }
         }
 
@@ -138,7 +144,7 @@
             display: inline-block;
             margin-right: 6px;
             margin-bottom: -2px;
-            color: #ff8f9f;
+            color: var(--danger);
         }
     }
 }

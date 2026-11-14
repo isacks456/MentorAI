@@ -1,7 +1,7 @@
 .security-settings {
     padding: 24px;
-    background-color: #1e222d;
-    border: 1px solid #303542;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 14px;
 
     .security-heading {
@@ -12,18 +12,18 @@
 
         h3 {
             margin: 0 0 7px;
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-size: 17px;
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 12px;
         }
 
         > svg {
-            color: #65a0ff;
+            color: var(--accent);
         }
     }
 
@@ -40,7 +40,7 @@
         padding: 17px 0;
         background: none;
         border: none;
-        border-bottom: 1px solid #303542;
+        border-bottom: 1px solid var(--border);
         text-align: left;
         cursor: pointer;
 
@@ -55,9 +55,9 @@
             width: 42px;
             height: 42px;
             flex-shrink: 0;
-            background-color: #252b38;
+            background-color: var(--bg-card-alt);
             border-radius: 10px;
-            color: #65a0ff;
+            color: var(--accent);
         }
 
         .security-item-info {
@@ -65,27 +65,27 @@
 
             h4 {
                 margin: 0 0 6px;
-                color: #f1f5f9;
+                color: var(--text-primary);
                 font-size: 13px;
                 font-weight: 500;
             }
 
             p {
                 margin: 0;
-                color: #9299a8;
+                color: var(--text-secondary);
                 font-size: 11px;
             }
         }
 
         > svg {
-            color: #9299a8;
+            color: var(--text-secondary);
             transition: 0.2s ease;
         }
 
         &:hover {
             .security-item-info h4,
             > svg {
-                color: #65a0ff;
+                color: var(--accent);
             }
         }
     }
@@ -95,7 +95,7 @@
         gap: 12px;
         margin-top: 22px;
         padding-top: 20px;
-        border-top: 1px solid #303542;
+        border-top: 1px solid var(--border);
 
         button {
             display: flex;
@@ -110,24 +110,24 @@
         }
 
         .logout-button {
-            background-color: #252b38;
-            border: 1px solid #343d4d;
-            color: #f1f5f9;
+            background-color: var(--bg-card-alt);
+            border: 1px solid var(--border-strong);
+            color: var(--text-primary);
 
             &:hover {
-                border-color: #3978f6;
-                color: #65a0ff;
+                border-color: var(--accent);
+                color: var(--accent);
             }
         }
 
         .delete-account-button {
-            background-color: #38252b;
-            border: 1px solid #59333c;
-            color: #f08080;
+            background-color: var(--danger-soft);
+            border: 1px solid var(--danger);
+            color: var(--danger);
 
             &:hover {
-                background-color: #492b33;
-                border-color: #d65b69;
+                background-color: var(--danger-soft);
+                border-color: var(--danger);
             }
         }
     }
@@ -135,13 +135,13 @@
     .security-data {
         margin: 15px 0;
         padding: 20px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: var(--bg-hover);
+        border: 1px solid var(--border);
         border-radius: 12px;
 
         h3 {
             margin: 15px 0 10px;
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-size: 16px;
 
             &:first-child {
@@ -151,7 +151,7 @@
 
         p {
             margin: 8px 0;
-            color: #aeb8c8;
+            color: var(--text-secondary);
             font-size: 14px;
         }
     }
@@ -165,17 +165,17 @@
         margin-top: 20px;
         padding: 11px 16px;
 
-        background: rgba(99, 102, 241, 0.12);
-        border: 1px solid rgba(99, 102, 241, 0.3);
+        background: var(--accent-soft);
+        border: 1px solid var(--accent);
         border-radius: 9px;
 
-        color: #a5b4fc;
+        color: var(--accent);
         font-size: 14px;
         cursor: pointer;
         transition: 0.2s ease;
 
         &:hover:not(:disabled) {
-            background: rgba(99, 102, 241, 0.22);
+            background: var(--accent-soft-strong);
         }
 
         &:disabled {
@@ -185,7 +185,7 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .security-settings {
         padding: 18px;
 

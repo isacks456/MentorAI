@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Moon, Sun, Monitor } from "lucide-react";
+import { Menu, Moon, Sun, Monitor, X } from "lucide-react";
 
 import "./Header.css"
 
@@ -36,7 +36,7 @@ function getInitials(profile) {
     return parts.map(part => part[0].toUpperCase()).join("");
 }
 
-function Header({ title, theme, setTheme }) {
+function Header({ title, theme, setTheme, menuOpen, onMenuToggle }) {
 	const navigate = useNavigate();
 
 	const [query, setQuery] = useState("");
@@ -72,12 +72,24 @@ function Header({ title, theme, setTheme }) {
 	return (
 		<header className="header">
 			<div className="header-left">
+				<button
+					type="button"
+					className="menu-button"
+					aria-label={menuOpen ? "Закрыть меню навигации" : "Открыть меню навигации"}
+					aria-expanded={menuOpen}
+					aria-controls="mobile-drawer"
+					title="Меню"
+					onClick={onMenuToggle}
+				>
+					{menuOpen ? <X size={22} /> : <Menu size={22} />}
+				</button>
+
 				<h1>{title}</h1>
 			</div>
 
 			<div className="header-right">
 
-				<form className="search" onSubmit={handleSearchSubmit}>
+				<form className="search" onSubmit={handleSearchSubmit} role="search">
 					<input
 						type="text"
 						placeholder="Поиск..."
@@ -96,13 +108,15 @@ function Header({ title, theme, setTheme }) {
 					<ThemeIcon size={20} />
 				</button>
 
-				<div
+				<button
+					type="button"
 					className="user-avatar"
 					title="Профиль"
+					aria-label="Профиль пользователя — перейти на страницу профиля"
 					onClick={() => navigate("/profile")}
 				>
 					{initials || "M"}
-				</div>
+				</button>
 
 			</div>
 

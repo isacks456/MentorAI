@@ -11,6 +11,7 @@ import {
 
 import Header from "./components/layout/Header"
 import Sidebar from './components/layout/Sidebar';
+import MobileDrawer from "./components/layout/MobileDrawer";
 import Dashboard from './pages/Dashboard';
 import Mentor from "./pages/Mentor";
 import Exercise from "./pages/Exercise";
@@ -23,10 +24,17 @@ import KnowledgeArticle from "./pages/KnowledgeArticle";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
+import "./styles/theme.css";
 import "./App.css"
 
-function AppLayout({ backendMessage, theme, setTheme }) {
+function AppLayout({ backendMessage, theme, setTheme, accent, setAccent }) {
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // закрываем drawer при смене страницы
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   const pageTitles = {
     "/": "Главная",
@@ -47,6 +55,13 @@ function AppLayout({ backendMessage, theme, setTheme }) {
           title={pageTitles[location.pathname] || "MentorAI"}
           theme={theme}
           setTheme={setTheme}
+          menuOpen={menuOpen}
+          onMenuToggle={() => setMenuOpen((open) => !open)}
+        />
+
+        <MobileDrawer
+          open={menuOpen}
+          onClose={() => setMenuOpen(false)}
         />
 
       <main className="app-content">
@@ -61,7 +76,7 @@ function AppLayout({ backendMessage, theme, setTheme }) {
           <Route path="/profile" element={<Profile/>} />
           <Route
               path="/settings"
-              element={<Settings theme={theme} setTheme={setTheme} />}
+              element={<Settings theme={theme} setTheme={setTheme} accent={accent} setAccent={setAccent} />}
           />
         </Routes>
       </main>
@@ -88,6 +103,12 @@ function App() {
     return localStorage.getItem("mentorai-theme") || "dark";
 });
 
+  const [accent, setAccent] = useState(() => {
+    const valid = ["blue", "purple", "green", "orange", "pink"];
+    const saved = localStorage.getItem("mentorai-accent");
+    return valid.includes(saved) ? saved : "blue";
+  });
+
 useEffect(() => {
     const root = document.documentElement;
 
@@ -103,6 +124,11 @@ useEffect(() => {
     applyTheme();
     localStorage.setItem("mentorai-theme", theme);
 }, [theme]);
+
+useEffect(() => {
+    document.documentElement.setAttribute("data-accent", accent);
+    localStorage.setItem("mentorai-accent", accent);
+}, [accent]);
 
   useEffect(() => {
     checkBackend()
@@ -128,6 +154,8 @@ useEffect(() => {
               backendMessage={backendMessage}
               theme={theme}
               setTheme={setTheme}
+              accent={accent}
+              setAccent={setAccent}
               />
             </RequireAuth>
           }

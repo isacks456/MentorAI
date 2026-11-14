@@ -1,7 +1,7 @@
 .notification-settings {
     padding: 24px;
-    background-color: #1e222d;
-    border: 1px solid #303542;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 14px;
 
     .notification-heading {
@@ -12,18 +12,18 @@
 
         h3 {
             margin: 0 0 7px;
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-size: 17px;
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 12px;
         }
 
         > svg {
-            color: #65a0ff;
+            color: var(--accent);
         }
     }
 
@@ -37,7 +37,7 @@
         align-items: center;
         gap: 14px;
         padding: 17px 0;
-        border-bottom: 1px solid #303542;
+        border-bottom: 1px solid var(--border);
 
         &:last-child {
             border-bottom: none;
@@ -50,9 +50,9 @@
             width: 42px;
             height: 42px;
             flex-shrink: 0;
-            background-color: #252b38;
+            background-color: var(--bg-card-alt);
             border-radius: 10px;
-            color: #65a0ff;
+            color: var(--accent);
         }
 
         .notification-info {
@@ -60,14 +60,14 @@
 
             h4 {
                 margin: 0 0 6px;
-                color: #f1f5f9;
+                color: var(--text-primary);
                 font-size: 13px;
                 font-weight: 500;
             }
 
             p {
                 margin: 0;
-                color: #9299a8;
+                color: var(--text-secondary);
                 font-size: 11px;
             }
         }
@@ -78,7 +78,7 @@
             width: 42px;
             height: 23px;
             padding: 3px;
-            background-color: #343d4d;
+            background-color: var(--border-strong);
             border-radius: 20px;
             cursor: pointer;
             transition: 0.2s ease;
@@ -95,13 +95,13 @@
 
             &.active {
                 justify-content: flex-end;
-                background-color: #3978f6;
+                background-color: var(--accent);
             }
         }
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .notification-settings {
         padding: 18px;
     }

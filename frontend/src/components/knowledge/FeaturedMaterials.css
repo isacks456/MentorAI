@@ -5,13 +5,13 @@
 
         h3 {
             margin: 0 0 7px;
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-size: 18px;
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 13px;
         }
     }
@@ -27,13 +27,13 @@
         flex-direction: column;
         min-width: 0;
         padding: 21px;
-        background-color: #1e222d;
-        border: 1px solid #303542;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
         border-radius: 12px;
         transition: 0.2s ease;
 
         &:hover {
-            border-color: #3978f6;
+            border-color: var(--accent);
             transform: translateY(-3px);
         }
 
@@ -52,29 +52,29 @@
             width: 42px;
             height: 42px;
             flex-shrink: 0;
-            background-color: #20365b;
+            background-color: var(--accent-soft);
             border-radius: 10px;
-            color: #65a0ff;
+            color: var(--accent);
         }
 
         .featured-category {
             padding: 6px 10px;
-            background-color: #252b38;
+            background-color: var(--bg-card-alt);
             border-radius: 20px;
-            color: #8db7ff;
+            color: var(--accent);
             font-size: 11px;
         }
 
         h4 {
             margin: 0 0 11px;
-            color: #fff;
+            color: var(--text-primary);
             font-size: 15px;
             line-height: 1.5;
         }
 
         .featured-description {
             margin: 0 0 22px;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 12px;
             line-height: 1.7;
         }
@@ -90,7 +90,7 @@
                 display: flex;
                 align-items: center;
                 gap: 7px;
-                color: #9299a8;
+                color: var(--text-secondary);
                 font-size: 12px;
             }
 
@@ -100,16 +100,16 @@
                 justify-content: center;
                 width: 34px;
                 height: 34px;
-                background-color: #252b38;
-                border: 1px solid #343d4d;
+                background-color: var(--bg-card-alt);
+                border: 1px solid var(--border-strong);
                 border-radius: 8px;
-                color: #65a0ff;
+                color: var(--accent);
                 cursor: pointer;
                 transition: 0.2s ease;
 
                 &:hover {
-                    background-color: #20365b;
-                    border-color: #3978f6;
+                    background-color: var(--accent-soft);
+                    border-color: var(--accent);
                 }
             }
         }
@@ -124,7 +124,7 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .featured-materials {
         .featured-grid {
             grid-template-columns: 1fr;

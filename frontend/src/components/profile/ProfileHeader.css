@@ -12,14 +12,14 @@
 
         h2 {
             margin: 0 0 7px;
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-size: 24px;
             font-weight: 600;
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 13px;
         }
     }
@@ -31,9 +31,9 @@
         width: 48px;
         height: 48px;
         flex-shrink: 0;
-        background-color: #20365b;
+        background-color: var(--accent-soft);
         border-radius: 12px;
-        color: #65a0ff;
+        color: var(--accent);
     }
 
     .profile-settings-button {
@@ -41,22 +41,22 @@
         align-items: center;
         gap: 9px;
         padding: 11px 15px;
-        background-color: #252b38;
-        border: 1px solid #343d4d;
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--border-strong);
         border-radius: 9px;
-        color: #f1f5f9;
+        color: var(--text-primary);
         font-size: 13px;
         cursor: pointer;
         transition: 0.2s ease;
 
         &:hover {
-            background-color: #20365b;
-            border-color: #3978f6;
+            background-color: var(--accent-soft);
+            border-color: var(--accent);
         }
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .profile-header {
         align-items: flex-start;
         flex-direction: column;

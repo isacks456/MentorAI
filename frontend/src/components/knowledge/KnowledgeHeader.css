@@ -1,7 +1,7 @@
 .knowledge-header {
     padding: 24px;
-    background-color: #1e222d;
-    border: 1px solid #303542;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 14px;
 
     .knowledge-header-content {
@@ -18,18 +18,18 @@
 
         > svg {
             flex-shrink: 0;
-            color: #5592ff;
+            color: var(--accent);
         }
 
         h2 {
             margin: 0 0 7px;
-            color: #fff;
+            color: var(--text-primary);
             font-size: 23px;
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 13px;
         }
     }
@@ -38,13 +38,13 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        color: #65a0ff;
+        color: var(--accent);
         font-size: 12px;
         white-space: nowrap;
     }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 640px) {
     .knowledge-header {
         .knowledge-header-content {
             align-items: flex-start;

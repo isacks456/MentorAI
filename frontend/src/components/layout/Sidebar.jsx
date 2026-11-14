@@ -12,7 +12,7 @@ import {
 
 import "./Sidebar.css"
 
-function Sidebar() {
+function Sidebar({ variant, onNavigate }) {
 
 	const menuItems = [
 		{
@@ -55,8 +55,31 @@ function Sidebar() {
 		}
 	];
 
+	const isDrawer = variant === "drawer";
+
+	const renderItems = (items) =>
+		items.map((item) => {
+			const Icon = item.icon;
+
+			return (
+				<NavLink
+				key={item.path}
+				to={item.path}
+				onClick={onNavigate}
+				className={({ isActive }) => `sidebar-item ${isActive ? "active" : ""}`}
+				data-path={item.path}
+				>
+					<Icon size={20}/>
+					<span>{item.title}</span>
+				</NavLink>
+			);
+		});
+
 	return (
-		<aside className="sidebar">
+		<aside
+			className={`sidebar ${isDrawer ? "sidebar-drawer" : ""}`}
+			aria-label="Основная навигация"
+		>
 			<div className="sidebar-logo">
 				<h2>MentorAI</h2>
 			</div>
@@ -65,40 +88,12 @@ function Sidebar() {
 
 				<p className="sidebar-heading">Основное меню</p>
 
-				{menuItems.map((item) => {
-					const Icon = item.icon;
+				{renderItems(menuItems)}
 
-					return (
-						<NavLink
-						key={item.path}
-						to={item.path}
-						className={({ isActive }) => `sidebar-item ${isActive ? "active" : ""}` 
-						}
-						data-path={item.path}
-						>
-							<Icon size={20}/>
-							<span>{item.title}</span>
-						</NavLink>
-					);
-				})}
 				<p className="sidebar-heading">Аккаунт</p>
 
-				{accountItems.map((item) => {
-					const Icon = item.icon;
-					return (
-						<NavLink
-						key={item.path}
-						to={item.path}
-						className={({ isActive }) => `sidebar-item ${isActive ? "active" : ""}` 
-						}
-						data-path={item.path}
-						>
-							<Icon size={20}/>
-							<span>{item.title}</span>
-						</NavLink>
-					);
-				})}
-				
+				{renderItems(accountItems)}
+
 			</nav>
 
 		</aside>

@@ -6,7 +6,7 @@ import SecuritySettings from "../components/settings/SecuritySettings";
 
 import "./Settings.css";
 
-function Settings({ theme, setTheme }) {
+function Settings({ theme, setTheme, accent, setAccent }) {
 	return (
 		<div className="settings-page">
 			<SettingsHeader/>
@@ -18,6 +18,8 @@ function Settings({ theme, setTheme }) {
 			 <AppearanceSettings
                 theme={theme}
                 setTheme={setTheme}
+                accent={accent}
+                setAccent={setAccent}
             />
 
 			<SecuritySettings/>

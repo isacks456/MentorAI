@@ -1,8 +1,8 @@
 .chat-input {
     position: relative;
     padding: 16px;
-    background-color: #1e222d;
-    border: 1px solid #303542;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 14px;
 
     textarea {
@@ -13,19 +13,19 @@
         padding: 14px 60px 14px 14px;
         resize: vertical;
         outline: none;
-        background-color: #252b38;
-        border: 1px solid #343d4d;
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--border-strong);
         border-radius: 9px;
-        color: #f1f5f9;
+        color: var(--text-primary);
         font-family: inherit;
         font-size: 14px;
 
         &::placeholder {
-            color: #747e90;
+            color: var(--text-secondary);
         }
 
         &:focus {
-            border-color: #3978f6;
+            border-color: var(--accent);
         }
     }
 
@@ -38,15 +38,15 @@
         justify-content: center;
         width: 38px;
         height: 38px;
-        background-color: #356fe8;
+        background-color: var(--accent);
         border: none;
         border-radius: 8px;
-        color: #ffffff;
+        color: var(--text-on-accent);
         cursor: pointer;
         transition: 0.2s;
 
         &:hover:not(:disabled) {
-            background-color: #4b83f5;
+            background-color: var(--accent-hover);
         }
 
         &:disabled {
@@ -61,7 +61,7 @@
 
     p {
         margin: 10px 0 0;
-        color: #747e90;
+        color: var(--text-secondary);
         font-size: 11px;
     }
 }

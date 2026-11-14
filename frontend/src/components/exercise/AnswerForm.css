@@ -1,7 +1,7 @@
 .answer-form {
     padding: 24px;
-    background-color: #1e222d;
-    border: 1px solid #303542;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 14px;
 
     .answer-heading {
@@ -9,13 +9,13 @@
 
         h3 {
             margin: 0 0 7px;
-            color: #ffffff;
+            color: var(--text-primary);
             font-size: 18px;
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 13px;
         }
     }
@@ -27,21 +27,21 @@
         padding: 16px;
         resize: vertical;
         outline: none;
-        background-color: #252b38;
-        border: 1px solid #343d4d;
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--border-strong);
         border-radius: 10px;
-        color: #f1f5f9;
+        color: var(--text-primary);
         font-family: inherit;
         font-size: 14px;
         line-height: 1.6;
         transition: 0.2s;
 
         &::placeholder {
-            color: #747e90;
+            color: var(--text-secondary);
         }
 
         &:focus {
-            border-color: #3978f6;
+            border-color: var(--accent);
         }
     }
 
@@ -53,7 +53,7 @@
         margin-top: 18px;
 
         span {
-            color: #858d9d;
+            color: var(--text-secondary);
             font-size: 12px;
         }
 
@@ -63,17 +63,17 @@
             justify-content: center;
             gap: 9px;
             padding: 12px 18px;
-            background-color: #356fe8;
+            background-color: var(--accent);
             border: none;
             border-radius: 9px;
-            color: #ffffff;
+            color: var(--text-on-accent);
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
 
             &:hover {
-                background-color: #4b83f5;
+                background-color: var(--accent-hover);
                 transform: translateY(-2px);
             }
 
@@ -85,7 +85,7 @@
 .answer-history {
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid #e5e5e5;
+    border-top: 1px solid var(--border);
 }
 
 .answer-history h3 {
@@ -96,7 +96,7 @@
 .answer-history-item {
     padding: 16px;
     margin-bottom: 12px;
-    background: #56565c;
+    background: var(--text-tertiary);
     border-radius: 12px;
 }
 
@@ -106,12 +106,12 @@
 }
 
 .answer-history-item small {
-    color: #c7bebe;
+    color: var(--text-secondary);
     font-size: 12px;
 }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .answer-form {
         padding: 18px;
 

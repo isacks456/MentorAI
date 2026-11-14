@@ -1,43 +1,50 @@
+/* Глобальный layout приложения.
+   Брейкпоинты системы: 640px (mobile), 900px (tablet — скрывается Sidebar),
+   1200px (desktop-wide). См. src/styles/theme.css */
+
 * {
 	box-sizing: border-box;
 }
 
-:root {
-    --app-background: #151821;
-    --text-primary: #f1f5f9;
-}
-
-[data-theme="light"] {
-    --app-background: #f1f5f9;
-    --text-primary: #1e293b;
-}
-
 body {
     margin: 0;
-    background-color: var(--app-background);
-    font-family: Arial, sans-serif;
+    background-color: var(--bg-app);
+    font-family: var(--font-sans);
     color: var(--text-primary);
 }
 
 .app-layout {
     min-height: 100vh;
-    background-color: var(--app-background);
+    background-color: var(--bg-app);
     color: var(--text-primary);
 }
+
 .app-main {
-	margin-left: 260px;
+	margin-left: var(--sidebar-width);
 	min-height: 100vh;
 }
+
 .app-content {
 	padding: 30px;
+	max-width: 1400px;
 }
 
-@media (max-width: 768px) {
+.backend-status {
+	display: none;
+}
+
+@media (max-width: 900px) {
     .app-main {
         margin-left: 0;
     }
 
     .app-content {
-        padding: 18px;
+        padding: 18px 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    .app-content {
+        padding: 14px 12px;
     }
 }

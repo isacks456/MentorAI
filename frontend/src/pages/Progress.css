@@ -3,25 +3,25 @@
     flex-direction: column;
     gap: 24px;
     width: 100%;
-    color: #f1f5f9;
+    color: var(--text-primary);
 
     .progress-heading {
         h2 {
             margin: 0 0 8px;
             font-size: 24px;
-            color: #fff;
+            color: var(--text-primary);
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 14px;
         }
     }
 
     .progress-bottom {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 24px;
     }
 }

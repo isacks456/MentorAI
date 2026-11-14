@@ -3,13 +3,13 @@
 	top: 0;
 	left: 0;
 	bottom: 0;
-	width: 260px;
-	background-color: #1e1e24;
-	color: #fff;
+	width: var(--sidebar-width);
+	background-color: var(--bg-sidebar);
+	color: var(--text-primary);
 	display: flex;
 	flex-direction: column;
 	padding: 24px 16px;
-	box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+	border-right: 1px solid var(--border);
 	box-sizing: border-box;
 	z-index: 100;
 	overflow-y: auto;
@@ -18,8 +18,13 @@
 		font-size: 20px;
 		font-weight: 700;
 		padding: 0 10px 30px;
-		border-bottom: 1px solid #34343d;
+		border-bottom: 1px solid var(--border);
 		margin-bottom: 25px;
+
+		h2 {
+			margin: 0;
+			color: var(--text-primary);
+		}
 	}
 
 	.sidebar-nav {
@@ -30,7 +35,7 @@
 		.sidebar-heading {
 			font-size: 12px;
 			font-weight: 600;
-			color: #92929d;
+			color: var(--text-tertiary);
 			text-transform: uppercase;
 			letter-spacing: 1px;
 			margin: 15px 10px 5px;
@@ -41,24 +46,41 @@
 			gap: 12px;
 			align-items: center;
 			padding: 12px;
-			border-radius: 8px;
-			color: #b8b8c2;
+			border-radius: var(--radius-sm);
+			color: var(--text-secondary);
 			cursor: pointer;
-			transition: all .2s ease;
+			transition: background-color .2s ease, color .2s ease;
 			text-decoration: none;
 
 			&:hover {
-				background-color: #30303a;
-				color: #fff;
+				background-color: var(--bg-hover);
+				color: var(--text-primary);
+			}
+
+			&:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
 			}
 
 			&.active {
-				background-color: #356ae6;
-				color: #fff;
+				background-color: var(--accent);
+				color: var(--text-on-accent);
 			}
 
 		}
 
 	}
 
+}
+
+/* На ширинах <= 900px сайдбар скрывается — вместо него мобильный drawer
+   (см. MobileDrawer.jsx / MobileDrawer.css). */
+@media (max-width: 900px) {
+	.sidebar {
+		display: none;
+	}
+
+	.sidebar.sidebar-drawer {
+		display: flex;
+	}
 }

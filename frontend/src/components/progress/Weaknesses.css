@@ -1,12 +1,12 @@
 .weaknesses {
     padding: 24px;
-    background-color: #1e222d;
-    border: 1px solid #303542;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 14px;
 
     h3 {
         margin: 0 0 24px;
-        color: #fff;
+        color: var(--text-primary);
         font-size: 18px;
     }
 
@@ -30,30 +30,30 @@
 
         h4 {
             margin: 0 0 6px;
-            color: #e5eaf2;
+            color: var(--border);
             font-size: 14px;
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 12px;
             line-height: 1.6;
         }
     }
 
     .weakness-item svg {
-        color: #e9ae55;
+        color: var(--warning);
     }
 
     .strengths-list {
         margin-top: 22px;
         padding-top: 20px;
-        border-top: 1px solid #303542;
+        border-top: 1px solid var(--border);
     }
 
     .strength-item svg {
-        color: #4caf85;
+        color: var(--success);
     }
 
     .recommendation {
@@ -62,18 +62,18 @@
         gap: 11px;
         margin-top: 22px;
         padding: 15px;
-        background-color: #202b40;
+        background-color: var(--accent-soft);
         border: 1px solid #303d55;
         border-radius: 9px;
 
         svg {
             flex-shrink: 0;
-            color: #70a5ff;
+            color: var(--accent);
         }
 
         p {
             margin: 0;
-            color: #aabbd5;
+            color: var(--text-secondary);
             font-size: 12px;
             line-height: 1.6;
         }
@@ -87,14 +87,14 @@
 
     .developing-list > h4 {
         margin: 0;
-        color: #e5b85c;
+        color: var(--warning);
         font-size: 15px;
     }
 
     .developing-item {
         padding: 14px;
-        background-color: #292c35;
-        border: 1px solid #48413a;
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--warning);
         border-radius: 10px;
     }
 
@@ -106,7 +106,7 @@
 
     .developing-item p {
         margin: 0;
-        color: #a6aab5;
+        color: var(--text-secondary);
         font-size: 13px;
     }
 }

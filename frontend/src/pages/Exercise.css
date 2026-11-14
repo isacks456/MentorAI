@@ -3,7 +3,7 @@
     flex-direction: column;
     gap: 24px;
     width: 100%;
-    color: #f1f5f9;
+    color: var(--text-primary);
 
     h2, h3, p {
         margin-top: 0;

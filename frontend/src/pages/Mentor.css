@@ -1,10 +1,10 @@
 .mentor-page {
 	display: grid;
-	grid-template-columns: 260px minmax(0,1fr);
+	grid-template-columns: 280px minmax(0, 1fr);
 	gap: 20px;
     height: calc(100vh - 150px);
     min-height: 550px;
-    color: #f1f5f9;
+    color: var(--text-primary);
 
     .mentor-main {
         display: flex;
@@ -12,5 +12,14 @@
         min-width: 0;
         min-height: 0;
         gap: 16px;
+    }
+}
+
+/* мобильный/планшетный режим чата: история уходит вниз */
+@media (max-width: 900px) {
+    .mentor-page {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: calc(100vh - 140px);
     }
 }

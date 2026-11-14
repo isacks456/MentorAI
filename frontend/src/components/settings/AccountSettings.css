@@ -1,7 +1,7 @@
 .account-settings {
     padding: 24px;
-    background-color: #1e222d;
-    border: 1px solid #303542;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 14px;
 
     .account-settings-heading {
@@ -12,18 +12,18 @@
 
         h3 {
             margin: 0 0 7px;
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-size: 17px;
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 12px;
         }
 
         > svg {
-            color: #65a0ff;
+            color: var(--accent);
         }
     }
 
@@ -37,7 +37,7 @@
         align-items: center;
         gap: 14px;
         padding: 17px 0;
-        border-bottom: 1px solid #303542;
+        border-bottom: 1px solid var(--border);
 
         &:last-child {
             border-bottom: none;
@@ -50,9 +50,9 @@
             width: 42px;
             height: 42px;
             flex-shrink: 0;
-            background-color: #252b38;
+            background-color: var(--bg-card-alt);
             border-radius: 10px;
-            color: #65a0ff;
+            color: var(--accent);
         }
 
         .account-setting-info {
@@ -61,13 +61,13 @@
             span {
                 display: block;
                 margin-bottom: 6px;
-                color: #9299a8;
+                color: var(--text-secondary);
                 font-size: 11px;
             }
 
             p {
                 margin: 0;
-                color: #f1f5f9;
+                color: var(--text-primary);
                 font-size: 13px;
             }
 
@@ -75,23 +75,23 @@
                 width: 100%;
                 padding: 9px 11px;
 
-                background-color: #252b38;
-                border: 1px solid #343d4d;
+                background-color: var(--bg-card-alt);
+                border: 1px solid var(--border-strong);
                 border-radius: 7px;
 
-                color: #f1f5f9;
+                color: var(--text-primary);
                 font-size: 13px;
                 outline: none;
 
                 transition: 0.2s ease;
 
                 &:focus {
-                    border-color: #3978f6;
-                    box-shadow: 0 0 0 2px rgba(57, 120, 246, 0.12);
+                    border-color: var(--accent);
+                    box-shadow: 0 0 0 2px var(--accent-soft);
                 }
 
                 &::placeholder {
-                    color: #9299a8;
+                    color: var(--text-secondary);
                 }
             }
         }
@@ -105,32 +105,32 @@
             height: 35px;
             padding: 0 10px;
             white-space: nowrap;
-            background-color: #252b38;
-            border: 1px solid #343d4d;
+            background-color: var(--bg-card-alt);
+            border: 1px solid var(--border-strong);
             border-radius: 8px;
-            color: #9299a8;
+            color: var(--text-secondary);
             cursor: pointer;
             transition: 0.2s ease;
 
             &:hover {
-                color: #65a0ff;
-                border-color: #3978f6;
+                color: var(--accent);
+                border-color: var(--accent);
             }
         }
         .cancel-edit-button {
-            color: #f87171 !important;
-            border-color: rgba(248, 113, 113, 0.3) !important;
+            color: var(--danger) !important;
+            border-color: var(--danger-soft) !important;
 
             &:hover {
-                color: #fca5a5 !important;
-                border-color: #f87171 !important;
-                background-color: rgba(248, 113, 113, 0.08);
+                color: var(--danger) !important;
+                border-color: var(--danger) !important;
+                background-color: var(--danger-soft);
             }
         }
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .account-settings {
         padding: 18px;
     }

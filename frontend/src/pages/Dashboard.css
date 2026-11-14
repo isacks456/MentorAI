@@ -3,23 +3,23 @@
 	flex-direction: column;
 	gap: 28px;
 	width: 100%;
-	color: #f1f5f9;
+	color: var(--text-primary);
 	
 	h2 {
 		margin: 0 0 18px;
 		font-size: 20px;
 		font-weight: 600;
-		color: #f1f5f9;
+		color: var(--text-primary);
 	}
 
 	p {
-		color: #9299a8;
+		color: var(--text-secondary);
 	}
 }
 
 .dashboard-bottom {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 	gap: 24px;
 }
 

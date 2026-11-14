@@ -1,7 +1,7 @@
 .learning-info {
     padding: 24px;
-    background-color: #1e222d;
-    border: 1px solid #303542;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 14px;
 
     .learning-info-heading {
@@ -12,18 +12,18 @@
 
         h3 {
             margin: 0 0 7px;
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-size: 17px;
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 12px;
         }
 
         > svg {
-            color: #65a0ff;
+            color: var(--accent);
         }
     }
 
@@ -35,13 +35,13 @@
 
     .learning-info-card {
         padding: 18px;
-        background-color: #252b38;
-        border: 1px solid #303542;
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--border);
         border-radius: 11px;
         transition: 0.2s ease;
 
         &:hover {
-            border-color: #3978f6;
+            border-color: var(--accent);
         }
 
         .learning-info-icon {
@@ -51,26 +51,26 @@
             width: 40px;
             height: 40px;
             margin-bottom: 16px;
-            background-color: #20365b;
+            background-color: var(--accent-soft);
             border-radius: 9px;
-            color: #65a0ff;
+            color: var(--accent);
         }
 
         span {
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 11px;
         }
 
         h4 {
             margin: 9px 0;
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-size: 14px;
             line-height: 1.5;
         }
 
         p {
             margin: 0;
-            color: #9299a8;
+            color: var(--text-secondary);
             font-size: 12px;
             line-height: 1.6;
         }
@@ -81,16 +81,16 @@
             box-sizing: border-box;
             padding: 10px;
             margin-top: 10px;
-            border: 1px solid #303542;
+            border: 1px solid var(--border);
             border-radius: 7px;
             outline: none;
-            background-color: #1e222d;
-            color: #f1f5f9;
+            background-color: var(--bg-card);
+            color: var(--text-primary);
             font-size: 12px;
             font-family: inherit;
 
             &:focus {
-                border-color: #3978f6;
+                border-color: var(--accent);
             }
         }
 
@@ -104,23 +104,32 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            min-width: 0;
 
         button {
             display: flex;
             align-items: center;
             gap: 6px;
             padding: 9px 12px;
-            border: 1px solid #303542;
+            border: 1px solid var(--border);
             border-radius: 8px;
-            background-color: #252b38;
-            color: #f1f5f9;
+            background-color: var(--bg-card-alt);
+            color: var(--text-primary);
             cursor: pointer;
             font-size: 12px;
             transition: 0.2s ease;
+            min-width: 0;
+
+            span {
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
 
             &:hover {
-                border-color: #3978f6;
-                background-color: #20365b;
+                border-color: var(--accent);
+                background-color: var(--accent-soft);
             }
         }
     }
@@ -134,12 +143,16 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .learning-info {
         padding: 18px;
 
         .learning-info-grid {
             grid-template-columns: 1fr;
+        }
+
+        .learning-info-actions {
+            flex-wrap: wrap;
         }
     }
 }
