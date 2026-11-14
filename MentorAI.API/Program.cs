@@ -254,12 +254,44 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseRateLimiter();
 
+// SEC-03/SEC-05: для Bearer-запросов сверяем Security Stamp из токена с БД.
+// Старый access-токен перестаёт работать сразу после смены пароля или logout.
+app.UseSecurityStampValidation();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.MapGroup("/api/auth")
     .MapIdentityApi<ApplicationUser>();
+
+// SEC-05: серверный logout. Ротирует Security Stamp текущего пользователя,
+// из-за чего прежний access-токен перестаёт проходить проверку выше (401),
+// а прежний refresh-токен отклоняется существующим /api/auth/refresh
+// (там ValidateSecurityStampAsync). Это выход со ВСЕХ устройств.
+// Пользователь определяется только из HttpContext.User, тело не читается.
+app.MapPost("/api/auth/logout", async (HttpContext context, UserManager<ApplicationUser> userManager) =>
+{
+    var user = await userManager.GetUserAsync(context.User);
+
+    if (user is null)
+    {
+        // токен не привязан к существующему пользователю
+        return Results.Unauthorized();
+    }
+
+    var result = await userManager.UpdateSecurityStampAsync(user);
+
+    if (!result.Succeeded)
+    {
+        return Results.Problem(
+            statusCode: StatusCodes.Status500InternalServerError,
+            title: "Внутренняя ошибка сервера",
+            detail: "Не удалось завершить сессию. Попробуй позже.");
+    }
+
+    return Results.Ok(new { message = "Вы вышли из аккаунта" });
+}).RequireAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

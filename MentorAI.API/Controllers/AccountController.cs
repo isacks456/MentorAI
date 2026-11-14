@@ -70,8 +70,12 @@ public class AccountController : ControllerBase
             });
         }
 
-        // сбрасываем активные сессии токенов, чтобы старые токены не действовали
-        await _userManager.UpdateSecurityStampAsync(user);
+        // В .NET 10 ChangePasswordAsync при успешной смене пароля сам ротирует
+        // Security Stamp (UserManager.UpdatePasswordHash -> UpdateSecurityStampInternal),
+        // поэтому повторный вызов UpdateSecurityStampAsync избыточен.
+        // После ротации stamp старый access-токен немедленно отклоняется
+        // middleware проверки Security Stamp (401), а старый refresh-токен —
+        // существующей проверкой в /api/auth/refresh.
 
         return Ok(new { message = "Пароль успешно изменён" });
     }

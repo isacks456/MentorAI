@@ -21,7 +21,8 @@ import {
     getLearningProfile,
     getTrainingProgress,
     changePassword,
-    deleteAccount
+    deleteAccount,
+    logoutUser
 } from "../../api/api";
 
 function validatePassword(password) {
@@ -61,7 +62,15 @@ function SecuritySettings() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState("");
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        // серверный logout (SEC-05) — best-effort: даже если сервер недоступен
+        // или токен уже истёк, локальную сессию всё равно очищаем и выходим
+        try {
+            await logoutUser();
+        } catch {
+            // игнорируем — выходим локально в любом случае
+        }
+
         sessionStorage.removeItem("mentorai-token");
         navigate("/login");
     };

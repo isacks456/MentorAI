@@ -402,6 +402,23 @@ export async function deleteAccount() {
     return response.json();
 }
 
+// Серверный logout (SEC-05): ротирует Security Stamp на backend и отзывает
+// текущий access/refresh токен. Best-effort: НЕ вызывает handleAuthError,
+// чтобы 401/сетевые ошибки не запускали редирект и не создавали цикл —
+// локальная очистка сессии выполняет вызывающий код.
+export async function logoutUser() {
+    try {
+        const response = await fetch(`${API_URL}/api/auth/logout`, {
+            method: "POST",
+            headers: getAuthHeaders()
+        });
+
+        return response.ok;
+    } catch {
+        return false;
+    }
+}
+
 // ---------- Подтверждение электронной почты ----------
 
 export async function getEmailStatus() {
