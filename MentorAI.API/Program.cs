@@ -3,8 +3,10 @@ using MentorAI.API.Data;
 using MentorAI.API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using MentorAI.API.Services;
 using System.Net.NetworkInformation;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,10 +64,55 @@ builder.Services.AddProblemDetails(options =>
     };
 });
 
+// HSTS (SEC-01): явные значения — 365 дней, без includeSubDomains и preload.
+// Сам middleware подключается только в Production (см. ниже, UseHsts).
+builder.Services.AddHsts(options =>
+{
+    options.MaxAge = TimeSpan.FromDays(365);
+    options.IncludeSubDomains = false;
+    options.Preload = false;
+});
+
 // защита от чрезмерно длинных запросов
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.Limits.MaxRequestBodySize = 1 * 1024 * 1024; // 1 МБ
+});
+
+// ограничение частоты запросов (SEC-02): единый global limiter,
+// выбирающий политику по точному совпадению (метод, маршрут).
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // без накопления очереди: при исчерпании лимита запрос сразу отклоняется
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+    {
+        var policy = RateLimitPolicies.Resolve(httpContext);
+
+        if (policy is null)
+        {
+            // запрос не расходует лимит, но должен обслуживаться:
+            // NoopLimiter всегда пропускает (в т.ч. OPTIONS и /api/health)
+            return RateLimitPartition.GetNoLimiter("unlimited");
+        }
+
+        var partitionKey = RateLimitPartitionKey.Build(httpContext, policy.Name);
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey,
+            _ => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = policy.PermitLimit,
+                Window = policy.Window,
+                QueueLimit = 0,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            });
+    });
+
+    options.OnRejected = (context, cancellationToken) =>
+        new ValueTask(RateLimitRejectionWriter.WriteAsync(context, cancellationToken));
 });
 
 var app = builder.Build();
@@ -155,6 +202,8 @@ using (var scope = app.Services.CreateScope())
     db.SaveChanges();
     }
 
+app.UseSecurityHeaders();
+
 app.UseCors("ReactFrontend");
 
 // необработанные исключения -> ProblemDetails без stack trace;
@@ -190,9 +239,21 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
+// HSTS только для Production (в Development middleware не подключается).
+// Значения заданы явно: 365 дней без includeSubDomains и preload.
+// HstsMiddleware добавляет заголовок только на HTTPS-запросах и только
+// для хостов вне ExcludedHosts (localhost/127.0.0.1/[::1] уже исключены
+// по умолчанию), поэтому dev и HTTP не затрагиваются.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+}
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseRateLimiter();
+
 app.UseAuthorization();
 
 app.MapControllers();
