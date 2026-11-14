@@ -16,6 +16,13 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
+// ---- система анонсов и email-рассылки ----
+builder.Services.Configure<AnnouncementOptions>(builder.Configuration.GetSection("Announcement"));
+builder.Services.AddSingleton<IAdminAccessService, AdminAccessService>();
+builder.Services.AddSingleton<AnnouncementQueue>();
+builder.Services.AddScoped<AnnouncementsService>();
+builder.Services.AddHostedService<AnnouncementDispatcher>();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlite("Data Source=mentorai.db");

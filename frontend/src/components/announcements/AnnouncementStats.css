@@ -1,0 +1,74 @@
+.announcement-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    .announcement-stats-total {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+
+        .announcement-stats-total-value {
+            color: var(--text-primary);
+            font-size: 26px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .announcement-stats-total-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+    }
+
+    .announcement-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+    }
+
+    .announcement-stat {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 12px;
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--text-tertiary);
+        border-radius: var(--radius-sm);
+
+        .announcement-stat-value {
+            color: var(--text-primary);
+            font-size: 19px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .announcement-stat-label {
+            color: var(--text-secondary);
+            font-size: 11px;
+        }
+
+        .announcement-stat-percent {
+            color: var(--text-tertiary);
+            font-size: 10px;
+        }
+
+        &.tone-success { border-left-color: var(--success); .announcement-stat-value { color: var(--success); } }
+        &.tone-danger { border-left-color: var(--danger); .announcement-stat-value { color: var(--danger); } }
+        &.tone-warning { border-left-color: var(--warning); .announcement-stat-value { color: var(--warning); } }
+        &.tone-accent { border-left-color: var(--accent); .announcement-stat-value { color: var(--accent); } }
+    }
+}
+
+@media (max-width: 900px) {
+    .announcement-stats .announcement-stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .announcement-stats .announcement-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

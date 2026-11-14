@@ -84,6 +84,24 @@ public class NotificationService
     public async Task<NotificationDeliveryResult> SendEmailNotificationAsync(
         string userId, NotificationKind kind, string subject, string htmlBody)
     {
+        var outcome = await SendEmailNotificationDetailedAsync(userId, kind, subject, htmlBody);
+
+        return outcome.Kind switch
+        {
+            NotificationOutcomeKind.Delivered => NotificationDeliveryResult.Success(),
+            NotificationOutcomeKind.Skipped => NotificationDeliveryResult.SkippedNow(outcome.Reason!),
+            _ => NotificationDeliveryResult.Failed(outcome.Reason ?? "Ошибка почтового сервиса")
+        };
+    }
+
+    /// <summary>
+    /// Расширенная версия отправки: возвращает подробный исход, различающий
+    /// «доставлено», «пропущено по правилам» и «ошибка SMTP» с классификацией,
+    /// безопасна ли повторная попытка. Используется системой анонсов.
+    /// </summary>
+    public async Task<NotificationOutcome> SendEmailNotificationDetailedAsync(
+        string userId, NotificationKind kind, string subject, string htmlBody)
+    {
         var gate = await CheckGateAsync(userId, kind);
 
         if (!gate.Allowed)
@@ -91,7 +109,7 @@ public class NotificationService
             _logger.LogInformation("Доставка уведомления {Kind} пользователю {UserId} заблокирована: {Reason}",
                 kind, userId, gate.Reason);
 
-            return NotificationDeliveryResult.SkippedNow(gate.Reason!);
+            return NotificationOutcome.Skipped(gate.Reason!);
         }
 
         var user = await _context.Users.FirstAsync(u => u.Id == userId);
@@ -101,13 +119,18 @@ public class NotificationService
             var sent = await _emailSender.SendAsync(user.Email ?? "", subject, htmlBody);
 
             return sent
-                ? NotificationDeliveryResult.Success()
-                : NotificationDeliveryResult.SkippedNow("Почтовый сервис не настроен");
+                ? NotificationOutcome.Delivered()
+                : NotificationOutcome.Skipped("Почтовый сервис не настроен");
         }
-        catch (EmailDeliveryException)
+        catch (EmailDeliveryException ex)
         {
-            // ошибки SMTP логируются в SmtpEmailSender без деталей наружу
-            return NotificationDeliveryResult.Failed("Ошибка почтового сервиса");
+            // Ошибки SMTP логируются в SmtpEmailSender без деталей наружу.
+            // Здесь классифицируем: можно ли безопасно повторить попытку.
+            _logger.LogWarning("Ошибка доставки уведомления {Kind} пользователю {UserId}", kind, userId);
+
+            return NotificationOutcome.Failed(
+                "Ошибка почтового сервиса",
+                SmtpFailureClassifier.Classify(ex));
         }
     }
 }
@@ -130,5 +153,31 @@ public class NotificationDeliveryResult
     public static NotificationDeliveryResult Success() => new() { Delivered = true };
     public static NotificationDeliveryResult SkippedNow(string reason) => new() { Skipped = true, Reason = reason };
     public static NotificationDeliveryResult Failed(string reason) => new() { Skipped = true, Reason = reason };
+}
+
+/// <summary>Исход попытки доставки уведомления (детальный).</summary>
+public enum NotificationOutcomeKind
+{
+    Delivered,
+    Skipped,
+    Failed
+}
+
+/// <summary>
+/// Подробный исход доставки: различает пропуск по правилам и ошибку SMTP,
+/// а для ошибки несёт классификацию повтора (безопасно ли повторять).
+/// </summary>
+public class NotificationOutcome
+{
+    public NotificationOutcomeKind Kind { get; private set; }
+    public string? Reason { get; private set; }
+
+    /// <summary>Имеет смысл только для Kind = Failed.</summary>
+    public SmtpFailureKind FailureKind { get; private set; } = SmtpFailureKind.Undefined;
+
+    public static NotificationOutcome Delivered() => new() { Kind = NotificationOutcomeKind.Delivered };
+    public static NotificationOutcome Skipped(string reason) => new() { Kind = NotificationOutcomeKind.Skipped, Reason = reason };
+    public static NotificationOutcome Failed(string reason, SmtpFailureKind failureKind) =>
+        new() { Kind = NotificationOutcomeKind.Failed, Reason = reason, FailureKind = failureKind };
 }
 

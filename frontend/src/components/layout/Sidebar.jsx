@@ -7,12 +7,17 @@ import {
     ChartNoAxesCombined,
     BookOpen,
 	UserRound,
-	Settings
+	Settings,
+    Megaphone
 } from "lucide-react";
+
+import { useAdminAccess } from "../../context/AdminAccessContext";
 
 import "./Sidebar.css"
 
 function Sidebar({ variant, onNavigate }) {
+
+	const { isAdmin } = useAdminAccess();
 
 	const menuItems = [
 		{
@@ -41,6 +46,16 @@ function Sidebar({ variant, onNavigate }) {
 			path: "/knowledge"
 		}
 	];
+
+	// Пункт «Анонсы» показывается только администраторам.
+	// Backend всё равно проверяет права на каждом запросе — это лишь UX.
+	if (isAdmin) {
+		menuItems.push({
+			title: "Анонсы",
+			icon: Megaphone,
+			path: "/announcements"
+		});
+	}
 
 	const accountItems = [
 		{

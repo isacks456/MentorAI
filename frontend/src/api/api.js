@@ -477,3 +477,136 @@ export async function verifyEmailCode(code) {
 
     return data;
 }
+
+// ---------- Анонсы (только для администраторов) ----------
+
+// Общий разбор ответа для эндпоинтов анонсов.
+// Возвращает текст ошибки из ProblemDetails, не раскрывая внутренних деталей.
+async function parseAnnouncementResponse(response, fallbackMessage) {
+    const data = await response.json().catch(() => null);
+
+    if (response.status === 401) {
+        handleAuthError(response);
+    }
+
+    if (!response.ok) {
+        const error = new Error(data?.detail || data?.title || fallbackMessage);
+        error.status = response.status;
+        throw error;
+    }
+
+    return data;
+}
+
+export async function getAnnouncementsAccess() {
+    const response = await fetch(`${API_URL}/api/Announcements/access`, {
+        headers: getAuthHeaders()
+    });
+
+    // 401 -> сессия истекла; прочие ошибки трактуем как «не админ»,
+    // чтобы не показывать пункт меню при сбое проверки прав.
+    if (response.status === 401) {
+        handleAuthError(response);
+    }
+
+    if (!response.ok) {
+        return { isAdmin: false };
+    }
+
+    return response.json();
+}
+
+export async function getAnnouncements() {
+    const response = await fetch(`${API_URL}/api/Announcements`, {
+        headers: getAuthHeaders()
+    });
+
+    return parseAnnouncementResponse(response, "Не удалось загрузить список анонсов");
+}
+
+export async function getAnnouncement(id) {
+    const response = await fetch(`${API_URL}/api/Announcements/${id}`, {
+        headers: getAuthHeaders()
+    });
+
+    return parseAnnouncementResponse(response, "Не удалось загрузить анонс");
+}
+
+export async function createAnnouncement(title, body) {
+    const response = await fetch(`${API_URL}/api/Announcements`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders()
+        },
+        body: JSON.stringify({ title, body })
+    });
+
+    return parseAnnouncementResponse(response, "Не удалось создать анонс");
+}
+
+export async function updateAnnouncement(id, title, body) {
+    const response = await fetch(`${API_URL}/api/Announcements/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders()
+        },
+        body: JSON.stringify({ title, body })
+    });
+
+    return parseAnnouncementResponse(response, "Не удалось сохранить черновик");
+}
+
+export async function previewAnnouncement(title, body) {
+    const response = await fetch(`${API_URL}/api/Announcements/preview`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders()
+        },
+        body: JSON.stringify({ title, body })
+    });
+
+    return parseAnnouncementResponse(response, "Не удалось построить предпросмотр");
+}
+
+export async function sendTestAnnouncement(id) {
+    const response = await fetch(`${API_URL}/api/Announcements/${id}/test`, {
+        method: "POST",
+        headers: getAuthHeaders()
+    });
+
+    return parseAnnouncementResponse(response, "Не удалось выполнить тестовую отправку");
+}
+
+export async function sendAnnouncement(id) {
+    const response = await fetch(`${API_URL}/api/Announcements/${id}/send`, {
+        method: "POST",
+        headers: getAuthHeaders()
+    });
+
+    return parseAnnouncementResponse(response, "Не удалось запустить рассылку");
+}
+
+export async function cancelAnnouncement(id) {
+    const response = await fetch(`${API_URL}/api/Announcements/${id}/cancel`, {
+        method: "POST",
+        headers: getAuthHeaders()
+    });
+
+    return parseAnnouncementResponse(response, "Не удалось остановить рассылку");
+}
+
+export async function resumeAnnouncement(id, { requeueFailed = false, requeueUndefined = false } = {}) {
+    const response = await fetch(`${API_URL}/api/Announcements/${id}/resume`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders()
+        },
+        body: JSON.stringify({ requeueFailed, requeueUndefined })
+    });
+
+    return parseAnnouncementResponse(response, "Не удалось возобновить рассылку");
+}

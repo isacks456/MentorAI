@@ -20,6 +20,9 @@ import Knowledge from "./pages/Knowledge";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import KnowledgeArticle from "./pages/KnowledgeArticle";
+import Announcements from "./pages/Announcements";
+
+import { AdminAccessProvider } from "./context/AdminAccessContext";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -44,11 +47,13 @@ function AppLayout({ backendMessage, theme, setTheme, accent, setAccent }) {
     "/progress": "Мой прогресс",
     "/knowledge": "База знаний",
     "/profile": "Профиль",
-    "/settings": "Настройки"
+    "/settings": "Настройки",
+    "/announcements": "Анонсы"
   };
 
   return (
     <div className="app-layout">
+      <AdminAccessProvider>
       <Sidebar/>
 
       <div className="app-main">
@@ -75,6 +80,7 @@ function AppLayout({ backendMessage, theme, setTheme, accent, setAccent }) {
           <Route path="/knowledge" element={<Knowledge/>} />
           <Route path="/knowledge/:id" element={<KnowledgeArticle/>} />
           <Route path="/profile" element={<Profile/>} />
+          <Route path="/announcements" element={<Announcements/>} />
           <Route
               path="/settings"
               element={<Settings theme={theme} setTheme={setTheme} accent={accent} setAccent={setAccent} />}
@@ -82,6 +88,7 @@ function AppLayout({ backendMessage, theme, setTheme, accent, setAccent }) {
         </Routes>
       </main>
       </div>
+      </AdminAccessProvider>
     </div>
   )
 }
