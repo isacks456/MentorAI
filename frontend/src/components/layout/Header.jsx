@@ -1,28 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Menu, Moon, Sun, Monitor, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 
 import "./Header.css"
 
 import { getProfile } from "../../api/api";
 
-const THEME_ICONS = {
-    dark: Moon,
-    light: Sun,
-    system: Monitor
-};
+// Текущая тема может быть "system" (задана на странице настроек).
+// В шапке переключаем только между явными "light" и "dark":
+// системную трактуем по фактическому предпочтению ОС.
+function isLightTheme(theme) {
+    if (theme === "light") return true;
 
-const THEME_LABELS = {
-    dark: "Тёмная тема",
-    light: "Светлая тема",
-    system: "Системная тема"
-};
+    if (theme === "system") {
+        return window.matchMedia("(prefers-color-scheme: light)").matches;
+    }
 
-const NEXT_THEME = {
-    dark: "light",
-    light: "system",
-    system: "dark"
-};
+    return false;
+}
 
 function getInitials(profile) {
     if (!profile) return "";
@@ -54,10 +49,14 @@ function Header({ title, theme, setTheme, menuOpen, onMenuToggle }) {
 	}, [location.pathname]);
 
 	const handleThemeToggle = () => {
-		setTheme(NEXT_THEME[theme] || "dark");
+		setTheme(isLightTheme(theme) ? "dark" : "light");
 	};
 
-	const ThemeIcon = THEME_ICONS[theme] || Moon;
+	const light = isLightTheme(theme);
+
+	const themeLabel = light ? "Тёмная тема" : "Светлая тема";
+
+	const ThemeIcon = light ? Moon : Sun;
 
 	const initials = getInitials(profile);
 
@@ -83,8 +82,8 @@ function Header({ title, theme, setTheme, menuOpen, onMenuToggle }) {
 
 				<button
 					className="header-button"
-					aria-label={`Сменить тему (сейчас: ${THEME_LABELS[theme] || THEME_LABELS.dark})`}
-					title={`${THEME_LABELS[theme] || THEME_LABELS.dark} — нажмите для переключения`}
+					aria-label={`Сменить тему (сейчас: ${light ? "светлая" : "тёмная"})`}
+					title={`${themeLabel} — нажмите для переключения`}
 					onClick={handleThemeToggle}
 				>
 					<ThemeIcon size={20} />
