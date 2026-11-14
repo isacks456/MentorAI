@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace MentorAI.API.Models;
 
 /// <summary>
@@ -11,6 +13,9 @@ public class NotificationPreference
 
     public string? ApplicationUserId { get; set; }
 
+    // Навигация только для EF; в JSON не сериализуется, иначе наружу
+    // попадали бы passwordHash, securityStamp и другие поля пользователя.
+    [JsonIgnore]
     public ApplicationUser? ApplicationUser { get; set; }
 
     public bool ProgressNotifications { get; set; } = true;

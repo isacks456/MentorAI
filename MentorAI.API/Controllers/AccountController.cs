@@ -125,6 +125,10 @@ public class AccountController : ControllerBase
                 .Where(p => p.ApplicationUserId == userId)
                 .ExecuteDeleteAsync();
 
+            await _context.EmailConfirmationCodes
+                .Where(c => c.ApplicationUserId == userId)
+                .ExecuteDeleteAsync();
+
             await _context.SaveChangesAsync();
 
             var result = await _userManager.DeleteAsync(user);

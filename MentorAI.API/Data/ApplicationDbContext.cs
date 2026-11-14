@@ -29,4 +29,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 	public DbSet<LearningProfile> LearningProfiles { get; set; }
 
 	public DbSet<NotificationPreference> NotificationPreferences { get; set; }
+
+	public DbSet<EmailConfirmationCode> EmailConfirmationCodes { get; set; }
 }

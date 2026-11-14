@@ -113,7 +113,9 @@ const handleRegister = async (e) => {
     }
 
     setIsLoading(false);
-    navigate("/", { replace: true });
+    // после регистрации направляем на подтверждение почты;
+    // JWT сохранён в sessionStorage, /verify-email проверяет его наличие
+    navigate("/verify-email", { replace: true });
 };
 
 return (

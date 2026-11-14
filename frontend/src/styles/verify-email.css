@@ -1,0 +1,169 @@
+/* Страница подтверждения электронной почты — расширяет auth-карточку */
+
+.verify-email-card {
+    text-align: center;
+}
+
+.verify-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 14px;
+    background-color: var(--accent-soft);
+    border-radius: 16px;
+    color: var(--accent);
+}
+
+.verify-email-card h1 {
+    font-size: 20px;
+}
+
+.verify-email-address {
+    color: var(--text-primary);
+    word-break: break-all;
+}
+
+.verify-code-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 18px 0 6px;
+}
+
+.verify-digit {
+    width: 44px;
+    height: 54px;
+    padding: 0;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+    caret-color: var(--accent);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    &.filled {
+        border-color: var(--accent);
+    }
+}
+
+.verify-timer {
+    margin: 10px 0 0;
+    color: var(--text-tertiary);
+    font-size: 12px;
+
+    &.warn {
+        color: var(--warning);
+    }
+}
+
+.verify-status {
+    margin: 14px 0 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.verify-success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px 0 0;
+    padding: 10px 12px;
+    background-color: var(--success-soft);
+    border-radius: var(--radius-sm);
+    color: var(--success);
+    font-size: 13px;
+    text-align: left;
+}
+
+/* служебное сообщение (например, «код отправлен повторно») —
+   не блокирует ввод кода, поэтому оформлено нейтрально */
+.verify-notice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px 0 0;
+    padding: 10px 12px;
+    background-color: var(--bg-card-alt);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 13px;
+    text-align: left;
+}
+
+.verify-resend-block {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.verify-resend-timer {
+    margin: 0;
+    color: var(--text-tertiary);
+    font-size: 12px;
+}
+
+.verify-resend {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin: 0 auto;
+    padding: 9px 14px;
+    background: none;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+
+    &:hover:not(:disabled) {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.verify-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-decoration: none;
+
+    &:hover {
+        color: var(--accent);
+    }
+}
+
+@media (max-width: 640px) {
+    .verify-code-row {
+        gap: 6px;
+    }
+
+    .verify-digit {
+        width: 38px;
+        height: 48px;
+        font-size: 19px;
+    }
+}

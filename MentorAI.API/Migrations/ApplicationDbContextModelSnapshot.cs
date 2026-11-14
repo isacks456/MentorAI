@@ -131,6 +131,39 @@ namespace MentorAI.API.Migrations
                     b.ToTable("ChatSessions");
                 });
 
+            modelBuilder.Entity("MentorAI.API.Models.EmailConfirmationCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CodeHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Consumed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("EmailConfirmationCodes");
+                });
+
             modelBuilder.Entity("MentorAI.API.Models.LearningProfile", b =>
                 {
                     b.Property<int>("Id")
@@ -466,6 +499,17 @@ namespace MentorAI.API.Migrations
                     b.HasOne("MentorAI.API.Models.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserId");
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("MentorAI.API.Models.EmailConfirmationCode", b =>
+                {
+                    b.HasOne("MentorAI.API.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ApplicationUser");
                 });

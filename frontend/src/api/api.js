@@ -385,3 +385,62 @@ export async function deleteAccount() {
 
     return response.json();
 }
+
+// ---------- Подтверждение электронной почты ----------
+
+export async function getEmailStatus() {
+    const response = await fetch(`${API_URL}/api/EmailVerification/status`, {
+        headers: getAuthHeaders()
+    });
+
+    if (!response.ok) {
+        handleAuthError(response);
+        throw new Error("Не удалось получить статус почты");
+    }
+
+    return response.json();
+}
+
+export async function sendEmailCode() {
+    const response = await fetch(`${API_URL}/api/EmailVerification/verification-code`, {
+        method: "POST",
+        headers: getAuthHeaders()
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (response.status === 401) {
+        handleAuthError(response);
+    }
+
+    if (!response.ok) {
+        const err = new Error(data?.detail || "Не удалось отправить код");
+        err.retryAfter = data?.detail ? (data.detail.match(/через (\d+)/) ? Number(data.detail.match(/через (\d+)/)[1]) : null) : null;
+        throw err;
+    }
+
+    return data;
+}
+
+export async function verifyEmailCode(code) {
+    const response = await fetch(`${API_URL}/api/EmailVerification/verify`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders()
+        },
+        body: JSON.stringify({ code })
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (response.status === 401) {
+        handleAuthError(response);
+    }
+
+    if (!response.ok) {
+        throw new Error(data?.detail || "Не удалось подтвердить код");
+    }
+
+    return data;
+}

@@ -79,7 +79,10 @@ public class NotificationPreferencesController : ControllerBase
         prefs.ProgressNotifications = request.ProgressNotifications;
         prefs.LessonReminders = request.LessonReminders;
         prefs.NewsUpdates = request.NewsUpdates;
-        prefs.EmailNotifications = request.EmailNotifications;
+
+        // email-уведомления нельзя включить без подтверждённой почты.
+        // UI блокирует переключатель, но API обязан обеспечивать это и самостоятельно.
+        prefs.EmailNotifications = request.EmailNotifications && user.EmailConfirmed;
 
         await _context.SaveChangesAsync();
 

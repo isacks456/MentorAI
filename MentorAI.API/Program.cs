@@ -9,6 +9,10 @@ using System.Net.NetworkInformation;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ChatService>();
+builder.Services.AddScoped<EmailVerificationService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

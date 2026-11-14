@@ -23,6 +23,7 @@ import KnowledgeArticle from "./pages/KnowledgeArticle";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
 
 import "./styles/theme.css";
 import "./App.css"
@@ -145,6 +146,7 @@ useEffect(() => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
 
         <Route
           path="/*"
