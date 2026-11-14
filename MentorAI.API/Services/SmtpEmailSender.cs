@@ -55,6 +55,32 @@ public class SmtpEmailSender : IEmailSender
 
     public bool IsConfigured => !string.IsNullOrWhiteSpace(_options.Host);
 
+    /// <summary>
+    /// Маскирует email для логов, чтобы не писать полный адрес:
+    /// "user@domain.com" -> "us***@domain.com".
+    /// </summary>
+    private static string MaskEmail(string? email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return "(пустой адрес)";
+        }
+
+        var at = email.IndexOf('@');
+
+        if (at <= 0)
+        {
+            return "***";
+        }
+
+        var name = email[..at];
+        var domain = email[at..];
+
+        var visible = name.Length <= 2 ? name[..1] : name[..2];
+
+        return $"{visible}***{domain}";
+    }
+
     public async Task<bool> SendAsync(string to, string subject, string htmlBody)
     {
         // Development без настроенного SMTP: безопасный вывод в консоль,
@@ -65,7 +91,7 @@ public class SmtpEmailSender : IEmailSender
             {
                 _logger.LogWarning(
                     "[DEV ONLY] SMTP не настроен — содержимое письма для {To} выведено в консоль:\nSubject: {Subject}\n{Body}",
-                    to, subject, htmlBody);
+                    MaskEmail(to), subject, htmlBody);
 
                 return true;
             }
@@ -106,8 +132,9 @@ public class SmtpEmailSender : IEmailSender
         }
         catch (Exception ex) when (ex is not EmailDeliveryException)
         {
-            // не раскрываем детали SMTP-сервера наружу
-            _logger.LogError(ex, "Ошибка отправки письма на {To}", to);
+            // не раскрываем детали SMTP-сервера наружу; email маскируется,
+            // но само исключение логируется — оно нужно для диагностики сбоев доставки
+            _logger.LogError(ex, "Ошибка отправки письма на {To}", MaskEmail(to));
             throw new EmailDeliveryException("Не удалось отправить письмо", ex);
         }
     }

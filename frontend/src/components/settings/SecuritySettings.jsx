@@ -211,25 +211,38 @@ function SecuritySettings() {
                     <ChevronRight size={19} />
                 </button>
 
-                <button type="button" className="security-item">
+                {/* Функциональность управления доступом пока не реализована:
+                    кнопка неактивна и явно объясняет это, чтобы не выглядеть рабочей */}
+                <button
+                    type="button"
+                    className="security-item unavailable"
+                    disabled
+                    aria-disabled="true"
+                    title="Функция появится в следующих обновлениях"
+                >
                     <div className="security-item-icon">
                         <Eye size={19} />
                     </div>
 
                     <div className="security-item-info">
                         <h4>Конфиденциальность</h4>
-                        <p>Управление доступом к личной информации</p>
+                        <p>Скоро: управление доступом к личной информации</p>
                     </div>
 
-                    <ChevronRight size={19} />
+                    <span className="security-item-badge">Скоро</span>
                 </button>
 
-                <button type="button" className="security-item">
+                <button
+                    type="button"
+                    className="security-item"
+                    onClick={handleDataClick}
+                    aria-expanded={showData}
+                >
                     <div className="security-item-icon">
                         <Database size={19} />
                     </div>
 
-                    <div className="security-item-info" onClick={handleDataClick}>
+                    <div className="security-item-info">
                         <h4>Мои данные</h4>
                         <p>Информация, хранящаяся в MentorAI</p>
                     </div>

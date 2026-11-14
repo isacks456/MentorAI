@@ -88,6 +88,36 @@
                 color: var(--accent);
             }
         }
+
+        /* неактивный пункт: функция ещё не реализована — не выглядит кликабельным */
+        &.unavailable {
+            cursor: default;
+            opacity: 0.55;
+
+            &:hover {
+                .security-item-info h4,
+                > svg {
+                    color: var(--text-primary);
+                }
+            }
+
+            .security-item-icon {
+                color: var(--text-secondary);
+            }
+        }
+
+        .security-item-badge {
+            padding: 4px 9px;
+            background-color: var(--bg-card-alt);
+            border: 1px solid var(--border-strong);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
     }
 
     .security-actions {
