@@ -23,6 +23,11 @@ const [error, setError] = useState("");
 const [success, setSuccess] = useState("");
 const [notice, setNotice] = useState("");
 const [alreadyConfirmed, setAlreadyConfirmed] = useState(false);
+// codeIssued — был ли уже выдан код (в этой сессии или ранее): влияет на надпись кнопки
+const [codeIssued, setCodeIssued] = useState(false);
+
+// защита от повторной авто-отправки (в т.ч. двойной вызов эффекта в StrictMode)
+const autoSentRef = useRef(false);
 
 // серверные времена (мс, приведённые к локальным часам клиента через смещение)
 const expiryRef = useRef(null);      // { ms: <expiresAt локального времени> }
@@ -37,6 +42,43 @@ const inputsRef = useRef([]);
 const toLocalTimeline = (serverNowIso, targetIso) => {
     const skew = Date.now() - new Date(serverNowIso).getTime();
     return new Date(targetIso).getTime() + skew;
+};
+
+// Автоматическая отправка первого кода при входе на страницу, если
+// активного кода ещё нет (например, сразу после регистрации).
+const autoSendFirstCode = async () => {
+    try {
+        const result = await sendEmailCode();
+
+        if (result.emailConfirmed) {
+            setAlreadyConfirmed(true);
+            return;
+        }
+
+        if (result.smtpNotConfigured) {
+            setError(result.message);
+            return;
+        }
+
+        setCodeIssued(true);
+        setNotice("Код отправлен на вашу почту");
+
+        if (result.expiresAt) {
+            expiryRef.current = { ms: toLocalTimeline(new Date().toISOString(), result.expiresAt) };
+        }
+
+        resendRef.current = { ms: Date.now() + 60 * 1000 };
+    } catch (err) {
+        // 429 (кулдаун/лимит) означает, что код уже был отправлен — не ошибка для пользователя
+        if (err.retryAfter) {
+            resendRef.current = { ms: Date.now() + err.retryAfter * 1000 };
+            setCodeIssued(true);
+        } else {
+            setError(err.message);
+        }
+    } finally {
+        setIsLoading(false);
+    }
 };
 
 useEffect(() => {
@@ -60,6 +102,7 @@ useEffect(() => {
 
             if (status.expiresAt && !status.emailConfirmed) {
                 expiryRef.current = { ms: toLocalTimeline(status.serverNow, status.expiresAt) };
+                setCodeIssued(true);
             } else {
                 expiryRef.current = null;
             }
@@ -69,10 +112,19 @@ useEffect(() => {
             } else {
                 resendRef.current = null;
             }
+
+            // после регистрации кода ещё нет — отправляем первый код автоматически
+            if (!status.emailConfirmed && !status.expiresAt && !autoSentRef.current) {
+                autoSentRef.current = true;
+                await autoSendFirstCode();
+            } else {
+                setIsLoading(false);
+            }
         } catch (err) {
-            if (!cancelled) setError(err.message);
-        } finally {
-            if (!cancelled) setIsLoading(false);
+            if (!cancelled) {
+                setError(err.message);
+                setIsLoading(false);
+            }
         }
     };
 
@@ -211,6 +263,7 @@ const handleResend = async () => {
         }
 
         setNotice("Новый код отправлен на вашу почту");
+        setCodeIssued(true);
         setDigits(["", "", "", "", "", ""]);
         inputsRef.current[0]?.focus();
         expiryRef.current = { ms: toLocalTimeline(new Date().toISOString(), new Date(Date.now() + 10 * 60 * 1000).toISOString()) };
@@ -311,7 +364,11 @@ return (
                             disabled={isResending}
                         >
                             <RefreshCw size={15} />
-                            {isResending ? "Отправляем..." : "Отправить код повторно"}
+                            {isResending
+                                ? "Отправляем..."
+                                : codeIssued
+                                    ? "Отправить код повторно"
+                                    : "Отправить код"}
                         </button>
                     )}
 

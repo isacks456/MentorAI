@@ -39,6 +39,9 @@ public class SmtpOptions
 
 public class SmtpEmailSender : IEmailSender
 {
+    // 15 секунд на соединение/отправку — зависший SMTP не блокирует запрос
+    private const int SmtpTimeoutMilliseconds = 15_000;
+
     private readonly SmtpOptions _options;
     private readonly ILogger<SmtpEmailSender> _logger;
     private readonly IHostEnvironment _environment;
@@ -81,7 +84,20 @@ public class SmtpEmailSender : IEmailSender
 
             using var client = new SmtpClient();
 
-            await client.ConnectAsync(_options.Host, _options.Port, SecureSocketOptions.StartTlsWhenAvailable);
+            // ограничиваем время ожидания, чтобы зависший SMTP не держал HTTP-запрос
+            client.Timeout = SmtpTimeoutMilliseconds;
+
+            // режим шифрования выбирается по настройкам/порту:
+            //  - порт 465 — implicit SSL (SMTPS)
+            //  - UseSsl = false — без шифрования (только для доверенной локальной сети)
+            //  - иначе — STARTTLS, если сервер его поддерживает (587 и подобные)
+            var secureOptions = _options.Port == 465
+                ? SecureSocketOptions.SslOnConnect
+                : !_options.UseSsl
+                    ? SecureSocketOptions.None
+                    : SecureSocketOptions.StartTlsWhenAvailable;
+
+            await client.ConnectAsync(_options.Host, _options.Port, secureOptions);
             await client.AuthenticateAsync(_options.User, _options.Password);
             await client.SendAsync(new SmtpSendRequest(message));
             await client.DisconnectAsync(true);
