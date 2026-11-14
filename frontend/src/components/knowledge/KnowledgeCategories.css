@@ -32,6 +32,7 @@
         background-color: var(--bg-card);
         border: 1px solid var(--border);
         border-radius: 12px;
+        box-shadow: var(--card-shadow);
         color: var(--text-primary);
         cursor: pointer;
         transition: 0.2s ease;
@@ -59,7 +60,7 @@
 
             h4 {
                 margin: 2px 0 7px;
-                color: #fff;
+                color: var(--text-primary);
                 font-size: 14px;
             }
 

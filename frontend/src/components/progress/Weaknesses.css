@@ -3,6 +3,7 @@
     background-color: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
+    box-shadow: var(--card-shadow);
 
     h3 {
         margin: 0 0 24px;
@@ -30,7 +31,7 @@
 
         h4 {
             margin: 0 0 6px;
-            color: var(--border);
+            color: var(--text-primary);
             font-size: 14px;
         }
 
@@ -63,7 +64,7 @@
         margin-top: 22px;
         padding: 15px;
         background-color: var(--accent-soft);
-        border: 1px solid #303d55;
+        border: 1px solid var(--accent-soft-strong);
         border-radius: 9px;
 
         svg {
@@ -100,7 +101,7 @@
 
     .developing-item h4 {
         margin: 0 0 6px;
-        color: #fff;
+        color: var(--text-primary);
         font-size: 14px;
     }
 

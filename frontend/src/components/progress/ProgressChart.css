@@ -3,13 +3,14 @@
     background-color: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
+    box-shadow: var(--card-shadow);
 
     .chart-heading {
         margin-bottom: 28px;
 
         h3 {
             margin: 0 0 7px;
-            color: #fff;
+            color: var(--text-primary);
             font-size: 18px;
         }
 

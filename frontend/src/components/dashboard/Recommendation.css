@@ -3,6 +3,7 @@
     background-color: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
+    box-shadow: var(--card-shadow);
 
     h2 {
         margin-bottom: 22px;
@@ -29,7 +30,7 @@
             margin: 0 0 8px;
             font-size: 14px;
             font-weight: 600;
-            color: var(--border);
+            color: var(--text-primary);
         }
 
         p {
@@ -42,7 +43,7 @@
 }
 
 .recommendations-empty {
-    color: var(--text-secondary, #888);
+    color: var(--text-secondary);
     font-size: 14px;
     padding: 12px 0;
 }

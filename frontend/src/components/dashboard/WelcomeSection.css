@@ -1,9 +1,10 @@
 .welcome-section {
 	padding: 32px;
-	background: linear-gradient(120deg, var(--accent-soft), #1b2232);
+	background: var(--hero-bg);
     border: 1px solid var(--border-strong);
     border-radius: 16px;
 	margin-top: 15px;
+	box-shadow: var(--card-shadow);
 
 	h2 {
         margin: 0 0 12px;

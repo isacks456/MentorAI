@@ -13,6 +13,7 @@
 		background-color: var(--bg-card);
 		border: 1px solid var(--border);
         border-radius: 14px;
+        box-shadow: var(--card-shadow);
         transition: 0.2s ease;
 
 		&:hover {
@@ -53,7 +54,7 @@
 }
 
 .statistics-empty {
-    color: var(--text-secondary, #888);
+    color: var(--text-secondary);
     font-size: 14px;
     padding: 12px 0;
 }

@@ -7,6 +7,7 @@
     background-color: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
+    box-shadow: var(--card-shadow);
 
     h2 {
         margin: 0 0 8px;
@@ -60,7 +61,7 @@
 
             &:hover:not(:disabled) {
                 background-color: var(--bg-card-alt);
-                color: #ffffff;
+                color: var(--text-primary);
                 border-color: var(--accent);
             }
 

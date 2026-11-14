@@ -3,6 +3,7 @@
     background-color: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
+    box-shadow: var(--card-shadow);
 
     .personal-info-top {
         display: flex;
@@ -196,9 +197,65 @@
     }    
 }
 
+.profile-edit-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+
+    button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 40px;
+        padding: 0 18px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .save-profile-button {
+        background-color: var(--accent);
+        border: 1px solid var(--accent);
+        color: var(--text-on-accent);
+
+        &:hover {
+            background-color: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        &:active {
+            background-color: var(--accent-active);
+            transform: translateY(1px);
+        }
+    }
+
+    .cancel-profile-button {
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--border-strong);
+        color: var(--text-secondary);
+
+        &:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+    }
+}
+
 @media (max-width: 640px) {
     .profile-edit-form {
         grid-template-columns: 1fr;
+    }
+
+    .profile-edit-actions {
+        flex-direction: column;
+
+        button {
+            width: 100%;
+        }
     }
 }
 

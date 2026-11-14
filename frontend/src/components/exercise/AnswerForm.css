@@ -3,6 +3,7 @@
     background-color: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
+    box-shadow: var(--card-shadow);
 
     .answer-heading {
         margin-bottom: 18px;
@@ -96,7 +97,8 @@
 .answer-history-item {
     padding: 16px;
     margin-bottom: 12px;
-    background: var(--text-tertiary);
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
     border-radius: 12px;
 }
 
