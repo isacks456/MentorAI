@@ -103,6 +103,22 @@ export async function getChatMessages(sessionId) {
     return await response.json();
 }
 
+export async function deleteChatSession(sessionId) {
+    const response = await fetch(
+        `${API_URL}/api/chat/sessions/${sessionId}`, {
+            method: "DELETE",
+            headers: getAuthHeaders()
+        }
+    );
+
+    if (!response.ok) {
+        handleAuthError(response);
+        throw new Error("Не удалось удалить чат");
+    }
+
+    return await response.json();
+}
+
 export async function getTrainingScenarios() {
     const response = await fetch(`${API_URL}/api/training/scenarios`, {
         headers: getAuthHeaders()

@@ -246,12 +246,12 @@ app.MapPost("/api/chat", async (
         return Results.Unauthorized();
     }
 
-    var reply = await chatService.SendMessageAsync(
+    var result = await chatService.SendMessageAsync(
         request,
         currentUser.Id
     );
 
-    if (reply == null)
+    if (result == null)
     {
         return Results.Problem(
             statusCode: 404,
@@ -261,7 +261,8 @@ app.MapPost("/api/chat", async (
 
     return Results.Ok(new
     {
-        reply = reply
+        reply = result.Reply,
+        title = result.Title
     });
 })
 .RequireAuthorization();
@@ -319,7 +320,7 @@ app.MapPost("/api/chat/sessions", async (
 
     var session = new ChatSession
     {
-        Title = "Новый диалог",
+        Title = ChatTitleGenerator.DefaultTitle,
         ApplicationUserId = currentUser.Id
     };
 
@@ -360,6 +361,46 @@ app.MapGet("/api/chat/sessions", async (
         .ToListAsync();
 
     return Results.Ok(sessions);
+})
+.RequireAuthorization();
+
+app.MapDelete("/api/chat/sessions/{sessionId}", async (
+    int sessionId,
+    ApplicationDbContext db,
+    UserManager<ApplicationUser> userManager,
+    System.Security.Claims.ClaimsPrincipal user) =>
+{
+    var currentUser = await userManager.GetUserAsync(user);
+
+    if (currentUser == null)
+    {
+        return Results.Unauthorized();
+    }
+
+    // чат ищется строго среди чатов текущего пользователя
+    var session = await db.ChatSessions
+        .FirstOrDefaultAsync(s =>
+            s.Id == sessionId &&
+            s.ApplicationUserId == currentUser.Id);
+
+    if (session == null)
+    {
+        return Results.Problem(
+            statusCode: 404,
+            title: "Не найдено",
+            detail: "Диалог не найден");
+    }
+
+    // удаляем сообщения чата, затем сам чат (не затрагивая другие чаты)
+    await db.ChatMessages
+        .Where(m => m.ChatSessionId == session.Id)
+        .ExecuteDeleteAsync();
+
+    db.ChatSessions.Remove(session);
+
+    await db.SaveChangesAsync();
+
+    return Results.Ok(new { deleted = true });
 })
 .RequireAuthorization();
 

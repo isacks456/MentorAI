@@ -8,7 +8,8 @@ import {
     sendMessage,
 	createChatSession,
     getChatSessions,
-    getChatMessages
+    getChatMessages,
+    deleteChatSession
 } from "../api/api";
 
 import "./Mentor.css";
@@ -33,6 +34,9 @@ function Mentor() {
 	// если пользователь переключился, пока запрос был в полёте
 	const activeSessionRef = useRef(activeSessionId);
 
+	// токен запроса истории: защищает от гонки при быстром переключении чатов
+	const loadTokenRef = useRef(0);
+
 	useEffect(() => {
 		activeSessionRef.current = activeSessionId;
 	}, [activeSessionId]);
@@ -49,9 +53,12 @@ function Mentor() {
 
 				setActiveSessionId(firstSession.id);
 
+				const token = ++loadTokenRef.current;
 				const messagesData = await getChatMessages(firstSession.id);
 
-				setMessages(messagesData);
+				if (token === loadTokenRef.current) {
+					setMessages(messagesData);
+				}
 			} else {
 				const newSession = await createChatSession();
 
@@ -71,6 +78,9 @@ function Mentor() {
 		try {
 			const newSession = await createChatSession();
 
+			// сбрасываем возможную загрузку предыдущего чата
+			loadTokenRef.current++;
+
 			setSessions((previousSessions) => [
 				newSession,
 				...previousSessions
@@ -81,17 +91,57 @@ function Mentor() {
 		} catch (error) {
 			console.error("Ошибка создания диалога:", error);
 		}
-}
+	}
 
 	async function handleSelectChat(sessionId) {
 		try {
 			setActiveSessionId(sessionId);
 
+			const token = ++loadTokenRef.current;
 			const data = await getChatMessages(sessionId);
+
+			// пользователь уже переключился на другой чат — не перезаписываем ленту
+			if (token !== loadTokenRef.current) {
+				return;
+			}
 
 			setMessages(data);
 		} catch (error) {
 			console.error("Ошибка загрузки диалога:", error);
+		}
+	}
+
+	async function handleDeleteChat(sessionId) {
+		try {
+			await deleteChatSession(sessionId);
+
+			// берём актуальный список чатов, а не значение из замыкания
+			const remaining = sessions.filter((session) => session.id !== sessionId);
+
+			setSessions(remaining);
+
+			// если удалили активный чат — переключаемся на первый оставшийся
+			// или создаём новый, чтобы всегда был активный чат
+			if (sessionId === activeSessionId) {
+				if (remaining.length > 0) {
+					const next = remaining[0];
+					setActiveSessionId(next.id);
+
+					const token = ++loadTokenRef.current;
+					const data = await getChatMessages(next.id);
+
+					if (token === loadTokenRef.current) {
+						setMessages(data);
+					}
+				} else {
+					const newSession = await createChatSession();
+					setSessions([newSession]);
+					setActiveSessionId(newSession.id);
+					setMessages([]);
+				}
+			}
+		} catch (error) {
+			console.error("Ошибка удаления диалога:", error);
 		}
 	}
 
@@ -120,6 +170,18 @@ function Mentor() {
 
         try {
             const data = await sendMessage(text, sessionId);
+
+			// сервер формирует название чата по первому сообщению —
+			// обновляем его в списке чатов
+			if (data.title) {
+				setSessions((previousSessions) =>
+					previousSessions.map((session) =>
+						session.id === sessionId
+							? { ...session, title: data.title }
+							: session
+					)
+				);
+			}
 
             setMessages((previousMessages) => {
 				// пользователь успел переключить диалог — ответ придёт при повторном открытии из истории
@@ -164,6 +226,7 @@ function Mentor() {
 			activeChatId={activeSessionId}
 			onSelectChat={handleSelectChat}
 			onNewChat={handleNewChat}
+			onDeleteChat={handleDeleteChat}
 			/>
 
             <div className="mentor-main">

@@ -40,6 +40,19 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
+        overflow-y: auto;
+        min-height: 0;
+    }
+
+    .chat-history-empty {
+        margin: 0;
+        padding: 14px;
+        background-color: var(--bg-card-alt);
+        border: 1px dashed var(--border-strong);
+        border-radius: 9px;
+        color: var(--text-secondary);
+        font-size: 12px;
+        line-height: 1.5;
     }
 
     .chat-history-item {
@@ -53,14 +66,66 @@
         cursor: pointer;
         transition: 0.2s;
 
-        svg {
+        .chat-item-icon {
             flex-shrink: 0;
             color: var(--text-secondary);
+        }
+
+        .chat-item-title {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .chat-delete {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            background: none;
+            border: none;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            opacity: 0;
+            transition: 0.2s;
+
+            &:hover {
+                background-color: var(--danger-soft);
+                color: var(--danger);
+            }
         }
 
         &:hover {
             background-color: var(--bg-card-alt);
             color: var(--text-primary);
+
+            .chat-item-icon {
+                color: var(--text-primary);
+            }
+
+            .chat-delete {
+                opacity: 1;
+            }
+        }
+
+        &.active {
+            background-color: var(--accent-soft);
+            color: var(--text-primary);
+            box-shadow: inset 2px 0 0 var(--accent);
+
+            .chat-item-icon {
+                color: var(--accent);
+            }
+
+            .chat-delete {
+                opacity: 1;
+            }
         }
     }
 }

@@ -13,7 +13,13 @@ public class ChatService
 		_db = db;
 	}
 
-	public async Task<string?> SendMessageAsync(ChatRequest request, string userId)
+	/// <summary>
+	/// Сохраняет сообщение пользователя и ответ наставника.
+	/// Если это первое сообщение в чате — формирует название чата по нему
+	/// (только один раз, последующие сообщения название не меняют).
+	/// Возвращает null, если чат не найден или не принадлежит пользователю.
+	/// </summary>
+	public async Task<ChatSendResult?> SendMessageAsync(ChatRequest request, string userId)
 	{
 		var session = await _db.ChatSessions
 			.FirstOrDefaultAsync(s =>
@@ -24,6 +30,11 @@ public class ChatService
 			{
 				return null;
 			}
+
+			// есть ли в чате сообщения до этого? если нет — сообщение первое
+			var hasMessages = await _db.ChatMessages
+				.AnyAsync(m => m.ChatSessionId == session.Id);
+
 			var userMessage = new ChatMessage
 			{
 				Role = "user",
@@ -42,9 +53,26 @@ public class ChatService
 
 			_db.ChatMessages.Add(aiMessage);
 
+			// автоматическое название: только по первому сообщению пользователя
+			if (!hasMessages)
+			{
+				session.Title = ChatTitleGenerator.Generate(request.Message);
+			}
+
 			await _db.SaveChangesAsync();
 
-			return aiMessage.Text;
+			return new ChatSendResult
+			{
+				Reply = aiMessage.Text,
+				Title = session.Title
+			};
 	}
 }
 
+/// <summary>Результат отправки сообщения: текст ответа и актуальное название чата.</summary>
+public class ChatSendResult
+{
+	public string Reply { get; set; } = string.Empty;
+
+	public string Title { get; set; } = ChatTitleGenerator.DefaultTitle;
+}

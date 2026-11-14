@@ -21,36 +21,43 @@ function ChatWindow({ messages }) {
                 </div>
 
                 <span className="ai-status">
-                    <span className="status-bot"></span>
+                    <span className="status-dot"></span>
                     Онлайн
                 </span>
             </div>
 
             <div className="chat-messages" ref={messagesRef}>
-                {messages.map((item, index) => (
-                    <div
-                        className={`message ${item.role}-message ${item.isError ? "error-message" : ""}`}
-                        key={index}
-                    >
-                        <div className="message-avatar">
-                            {item.role === "user" ? (
-                                <User size={20} />
-                            ) : (
-                                <Bot size={20} />
-                            )}
-                        </div>
-
-                        <div className="message-content">
-                            <span>
-                                {item.role === "user" ? "Ты" : "AI-наставник"}
-                            </span>
-
-                            {item.isError && <AlertCircle size={15} className="error-icon" />}
-
-                            <p>{item.text}</p>
-                        </div>
+                {messages.length === 0 ? (
+                    <div className="chat-empty">
+                        <Bot size={30} />
+                        <p>Начни диалог — напиши первое сообщение, и наставник ответит.</p>
                     </div>
-                ))}
+                ) : (
+                    messages.map((item, index) => (
+                        <div
+                            className={`message ${item.role}-message ${item.isError ? "error-message" : ""}`}
+                            key={index}
+                        >
+                            <div className="message-avatar">
+                                {item.role === "user" ? (
+                                    <User size={20} />
+                                ) : (
+                                    <Bot size={20} />
+                                )}
+                            </div>
+
+                            <div className="message-content">
+                                <span>
+                                    {item.role === "user" ? "Ты" : "AI-наставник"}
+                                </span>
+
+                                {item.isError && <AlertCircle size={15} className="error-icon" />}
+
+                                <p>{item.text}</p>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
         </section>
     );

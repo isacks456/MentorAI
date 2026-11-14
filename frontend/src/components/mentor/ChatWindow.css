@@ -54,6 +54,29 @@
         padding: 28px 24px;
     }
 
+    .chat-empty {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 30px;
+        text-align: center;
+
+        > svg {
+            color: var(--text-secondary);
+        }
+
+        p {
+            margin: 0;
+            max-width: 320px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    }
+
     /* в мобильном/планшетном режиме (страница чата складывается в стек)
        лента сообщений получает минимальную высоту */
     @media (max-width: 900px) {
