@@ -127,6 +127,16 @@
                 background-color: var(--danger-soft);
             }
         }
+
+        .account-setting-locked {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            color: var(--text-tertiary);
+            flex-shrink: 0;
+        }
     }
 }
 

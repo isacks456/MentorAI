@@ -310,3 +310,78 @@ export async function saveLearningProfile(profile) {
 
     return response.json();
 }
+
+// ---------- Настройки уведомлений (хранятся на сервере, у каждого пользователя свои) ----------
+
+export async function getNotificationPreferences() {
+    const response = await fetch(`${API_URL}/api/NotificationPreferences`, {
+        headers: getAuthHeaders()
+    });
+
+    if (!response.ok) {
+        handleAuthError(response);
+        throw new Error("Не удалось загрузить настройки уведомлений");
+    }
+
+    return response.json();
+}
+
+export async function saveNotificationPreferences(prefs) {
+    const response = await fetch(`${API_URL}/api/NotificationPreferences`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders()
+        },
+        body: JSON.stringify(prefs)
+    });
+
+    if (!response.ok) {
+        handleAuthError(response);
+        throw new Error("Не удалось сохранить настройки уведомлений");
+    }
+
+    return response.json();
+}
+
+// ---------- Аккаунт: смена пароля и удаление ----------
+
+export async function changePassword(currentPassword, newPassword, confirmNewPassword) {
+    const response = await fetch(`${API_URL}/api/Account/change-password`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeaders()
+        },
+        body: JSON.stringify({ currentPassword, newPassword, confirmNewPassword })
+    });
+
+    if (response.status === 401) {
+        handleAuthError(response);
+    }
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+        throw new Error(data?.detail || "Не удалось сменить пароль");
+    }
+
+    return data;
+}
+
+export async function deleteAccount() {
+    const response = await fetch(`${API_URL}/api/Account/delete`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
+
+    if (response.status === 401) {
+        handleAuthError(response);
+    }
+
+    if (!response.ok) {
+        throw new Error("Не удалось удалить аккаунт");
+    }
+
+    return response.json();
+}

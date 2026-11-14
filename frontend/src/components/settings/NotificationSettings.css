@@ -32,6 +32,29 @@
         flex-direction: column;
     }
 
+    .notification-error {
+        margin: 0 0 12px;
+        padding: 10px 12px;
+        background-color: var(--danger-soft);
+        border-radius: var(--radius-sm);
+        color: var(--danger);
+        font-size: 12px;
+    }
+
+    .notification-status {
+        margin: 10px 0 0;
+        color: var(--text-tertiary);
+        font-size: 11px;
+        min-height: 14px;
+    }
+
+    .notification-note {
+        margin: 6px 0 0;
+        color: var(--text-tertiary);
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
     .notification-item {
         display: flex;
         align-items: center;

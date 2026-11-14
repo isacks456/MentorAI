@@ -88,13 +88,13 @@ public class ProfileController : ControllerBase
 		}
 
 		// [Required] пропускает строки из одних пробелов — проверяем вручную
-		if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.Email))
+		if (string.IsNullOrWhiteSpace(request.Name))
 		{
 			return BadRequest(new ProblemDetails
 			{
 				Status = 400,
 				Title = "Некорректный запрос",
-				Detail = "Имя и email не могут быть пустыми"
+				Detail = "Имя не может быть пустым"
 			});
 		}
 
@@ -110,7 +110,9 @@ public class ProfileController : ControllerBase
 		}
 
 		profile.Name = request.Name;
-		profile.Email = request.Email;
+		// Email — постоянный идентификатор учётной записи: берётся только
+		// из ASP.NET Identity и не может быть изменён клиентом
+		profile.Email = user.Email ?? profile.Email;
 		profile.Age = request.Age;
 		profile.Course = request.Course;
 		profile.Institution = request.Institution;
@@ -127,10 +129,7 @@ public record UserProfileUpdateRequest
 	[MaxLength(100, ErrorMessage = "Имя не может быть длиннее 100 символов")]
 	public string Name { get; set; } = "";
 
-	[Required(ErrorMessage = "Email не может быть пустым")]
-	[EmailAddress(ErrorMessage = "Введите корректный адрес электронной почты")]
-	[MaxLength(100, ErrorMessage = "Email не может быть длиннее 100 символов")]
-	public string Email { get; set; } = "";
+	// Email намеренно отсутствует: он неизменяем и всегда берётся из Identity
 
 	// 0 означает "возраст не указан" (совместимость с существующим профилем)
 	[Range(0, 120, ErrorMessage = "Возраст должен быть от 1 до 120 или не указан")]

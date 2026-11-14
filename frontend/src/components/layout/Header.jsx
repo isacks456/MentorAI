@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Menu, Moon, Sun, Monitor, X } from "lucide-react";
 
 import "./Header.css"
@@ -42,13 +42,17 @@ function Header({ title, theme, setTheme, menuOpen, onMenuToggle }) {
 	const [query, setQuery] = useState("");
 	const [profile, setProfile] = useState(null);
 
+	// перезагружаем профиль при смене страницы, чтобы имя и аватар
+	// отражали самые свежие данные после редактирования
+	const location = useLocation();
+
 	useEffect(() => {
 		getProfile()
 			.then(setProfile)
 			.catch(() => {
 				// профиль не загрузился — показываем пустой аватар без имени
 			});
-	}, []);
+	}, [location.pathname]);
 
 	const handleSearchSubmit = (event) => {
 		event.preventDefault();

@@ -27,4 +27,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 	public DbSet<UserProfile> UserProfiles { get; set; }
 
 	public DbSet<LearningProfile> LearningProfiles { get; set; }
+
+	public DbSet<NotificationPreference> NotificationPreferences { get; set; }
 }

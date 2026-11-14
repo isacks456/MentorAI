@@ -16,7 +16,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services
-    .AddIdentityApiEndpoints<ApplicationUser>()
+    .AddIdentityApiEndpoints<ApplicationUser>(options =>
+    {
+        // политика надёжных паролей — единая для регистрации и смены пароля
+        options.Password.RequiredLength = 8;
+        options.Password.RequireDigit = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequiredUniqueChars = 4;
+    })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddCors(options =>

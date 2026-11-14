@@ -171,6 +171,34 @@ namespace MentorAI.API.Migrations
                     b.ToTable("LearningProfiles");
                 });
 
+            modelBuilder.Entity("MentorAI.API.Models.NotificationPreference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("EmailNotifications")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("LessonReminders")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("NewsUpdates")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ProgressNotifications")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("NotificationPreferences");
+                });
+
             modelBuilder.Entity("MentorAI.API.Models.TrainingAnswer", b =>
                 {
                     b.Property<int>("Id")
@@ -443,6 +471,15 @@ namespace MentorAI.API.Migrations
                 });
 
             modelBuilder.Entity("MentorAI.API.Models.LearningProfile", b =>
+                {
+                    b.HasOne("MentorAI.API.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("MentorAI.API.Models.NotificationPreference", b =>
                 {
                     b.HasOne("MentorAI.API.Models.ApplicationUser", "ApplicationUser")
                         .WithMany()
