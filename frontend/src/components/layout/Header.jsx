@@ -39,7 +39,6 @@ function getInitials(profile) {
 function Header({ title, theme, setTheme, menuOpen, onMenuToggle }) {
 	const navigate = useNavigate();
 
-	const [query, setQuery] = useState("");
 	const [profile, setProfile] = useState(null);
 
 	// перезагружаем профиль при смене страницы, чтобы имя и аватар
@@ -53,17 +52,6 @@ function Header({ title, theme, setTheme, menuOpen, onMenuToggle }) {
 				// профиль не загрузился — показываем пустой аватар без имени
 			});
 	}, [location.pathname]);
-
-	const handleSearchSubmit = (event) => {
-		event.preventDefault();
-
-		const trimmed = query.trim();
-
-		if (!trimmed) return;
-
-		navigate(`/knowledge?q=${encodeURIComponent(trimmed)}`);
-		setQuery("");
-	};
 
 	const handleThemeToggle = () => {
 		setTheme(NEXT_THEME[theme] || "dark");
@@ -92,16 +80,6 @@ function Header({ title, theme, setTheme, menuOpen, onMenuToggle }) {
 			</div>
 
 			<div className="header-right">
-
-				<form className="search" onSubmit={handleSearchSubmit} role="search">
-					<input
-						type="text"
-						placeholder="Поиск..."
-						value={query}
-						onChange={(event) => setQuery(event.target.value)}
-						aria-label="Поиск по базе знаний"
-					/>
-				</form>
 
 				<button
 					className="header-button"

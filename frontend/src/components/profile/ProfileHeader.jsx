@@ -1,4 +1,4 @@
-import { UserRound, Settings } from "lucide-react";
+import { UserRound } from "lucide-react";
 import "./ProfileHeader.css";
 
 function ProfileHeader() {
@@ -14,11 +14,6 @@ function ProfileHeader() {
                     <p>Управляй личной информацией и отслеживай своё развитие</p>
                 </div>
             </div>
-
-            <button type="button" className="profile-settings-button">
-                <Settings size={18} />
-                <span>Настройки профиля</span>
-            </button>
         </section>
     );
 }
