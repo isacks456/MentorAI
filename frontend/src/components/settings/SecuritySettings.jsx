@@ -1,6 +1,5 @@
 import {
     ShieldCheck,
-    Eye,
     Database,
     LogOut,
     Trash2,
@@ -15,6 +14,8 @@ import "./SecuritySettings.css";
 import { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+
+import PasswordInput from "../PasswordInput";
 
 import {
     getProfile,
@@ -190,7 +191,7 @@ function SecuritySettings() {
         <section className="security-settings">
             <div className="security-heading">
                 <div>
-                    <h3>Безопасность и конфиденциальность</h3>
+                    <h3>Безопасность</h3>
                     <p>Управление защитой и личными данными аккаунта</p>
                 </div>
 
@@ -220,27 +221,6 @@ function SecuritySettings() {
                     <ChevronRight size={19} />
                 </button>
 
-                {/* Функциональность управления доступом пока не реализована:
-                    кнопка неактивна и явно объясняет это, чтобы не выглядеть рабочей */}
-                <button
-                    type="button"
-                    className="security-item unavailable"
-                    disabled
-                    aria-disabled="true"
-                    title="Функция появится в следующих обновлениях"
-                >
-                    <div className="security-item-icon">
-                        <Eye size={19} />
-                    </div>
-
-                    <div className="security-item-info">
-                        <h4>Конфиденциальность</h4>
-                        <p>Скоро: управление доступом к личной информации</p>
-                    </div>
-
-                    <span className="security-item-badge">Скоро</span>
-                </button>
-
                 <button
                     type="button"
                     className="security-item"
@@ -266,8 +246,7 @@ function SecuritySettings() {
 
                     <label>
                         <span>Текущий пароль</span>
-                        <input
-                            type="password"
+                        <PasswordInput
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
                             autoComplete="current-password"
@@ -278,8 +257,7 @@ function SecuritySettings() {
 
                     <label>
                         <span>Новый пароль</span>
-                        <input
-                            type="password"
+                        <PasswordInput
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             autoComplete="new-password"
@@ -293,8 +271,7 @@ function SecuritySettings() {
 
                     <label>
                         <span>Подтвердите новый пароль</span>
-                        <input
-                            type="password"
+                        <PasswordInput
                             value={confirmNewPassword}
                             onChange={(e) => setConfirmNewPassword(e.target.value)}
                             autoComplete="new-password"
