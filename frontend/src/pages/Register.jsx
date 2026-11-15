@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BrainCircuit } from "lucide-react";
 import { registerUser, loginUser } from "../api/auth";
 import { saveProfile } from "../api/api";
+import PasswordInput from "../components/PasswordInput";
 import "../styles/auth.css";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -148,8 +149,7 @@ return (
                     required
                 />
 
-                <input
-                    type="password"
+                <PasswordInput
                     placeholder="Пароль"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -158,8 +158,7 @@ return (
                 />
                 <p className="auth-hint">Минимум 8 символов: цифра, строчная и заглавная буквы, спецсимвол</p>
 
-                <input
-                    type="password"
+                <PasswordInput
                     placeholder="Повторите пароль"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}

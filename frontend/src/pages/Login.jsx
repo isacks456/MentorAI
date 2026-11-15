@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BrainCircuit } from "lucide-react";
 import { loginUser } from "../api/auth";
+import PasswordInput from "../components/PasswordInput";
 import "../styles/auth.css";
 
 function Login() {
@@ -46,8 +47,7 @@ return (
                     required
                 />
 
-                <input
-                    type="password"
+                <PasswordInput
                     placeholder="Пароль"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
